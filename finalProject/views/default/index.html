@@ -1,0 +1,249 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+<div id="target"></div>
+
+<script id="template" type="text/ractive">
+    {% #if loggedIn === "True" %}
+        <input class="btn btn-primary" type="submit" value="Create New Post" on-click="addCat"/>
+    {% /if %}
+    <div>
+        {% #cat_dict:cat_id %}
+            <div class="catList">
+                {% #if editable %}
+                <p><b>Cat Title</b> (Click Title to Edit It):</p>
+                    {% #if editing %}
+                        <textarea id="{% ident %}" on-blur="editdone" data-iden="{% key %}" value="{% name %}" rows="5" columns = "30"></textarea>
+                    {% /if %}
+                    {% #if editing === false %}
+                        <div on-click="startedit" data-iden="{% key %}"><p class = "displayCat">{% name %}</p></div>
+                    {% /if %}
+                {% /if %}
+                {% #if editable === false %}
+                    <p><b>Cat Title</b></p>
+                    <div><p class = "displayCat">{% name %}</p></div>
+                {% /if %}
+                {% #if editing === false %}
+                    <a href="{% "posts" %}">View More details</a>
+                {% /if %}
+            </div>
+        {% /cat_dict %}
+    </div>
+
+</script>
+
+<script>
+$(function() {
+  // Ractive object
+  var MAIN = new Ractive({
+    el: '#target',
+    template: '#template',
+    delimiters: ['{%', '%}'],
+    tripleDelimiters: ['{%%', '%%}'],
+    data: {
+        cat_dict:{},
+        mytext: 'Enter Cat Name',
+        loggedIn: "{{=loggedIn}}",
+        user_id: "{{=user_id}}",
+        oldCatName: "",
+        editingKey: -1
+    },
+  });
+    function periodic_receive() {
+        $.ajax("{{=URL('default', 'load_cats', user_signature=True)}}",
+                {
+                    method: 'POST',
+                    success: function (data) {
+                        var oldRow = -1;
+                        if(MAIN.get("editingKey")!=-1){
+                            oldRow = MAIN.get("cat_dict")[MAIN.get("editingKey")];
+                        }
+                        var cat_dict = data['cat_dict'];
+                        m = Object.keys(cat_dict).length;
+                        var i;
+                        for (var key in cat_dict){
+                            if(cat_dict[key]["cat_creator"]==MAIN.get('user_id')){
+                                cat_dict[key]["editable"] = true;
+                            }
+                            else{
+                                cat_dict[key]["editable"] = false;
+                            }
+                            if(key != MAIN.get("editingKey")){
+                                cat_dict[key]["editing"] = false;
+                            }
+                            else{
+                                cat_dict[key] = oldRow;
+                            }
+                            if(cat_dict[key]["draft_id"] == MAIN.get("editingKey")){
+                                delete cat_dict[key];
+                            }
+                            else {
+                                cat_dict[key]["ident"] = cat_dict[key]["draft_id"];
+                                cat_dict[key]["key"] = key;
+                            }
+                        }
+                        if((!(MAIN.get("editingKey") in cat_dict))&& (MAIN.get("editingKey")!= -1)){
+                            cat_dict[MAIN.get("editingKey")] = oldRow;
+                        }
+                        var old_dict = MAIN.get("cat_dict");
+                        for (key in old_dict){
+                            if(old_dict[key]["fromDB"]=="false"){
+                                cat_dict[key] = old_dict[key];
+                            }
+                        }
+                        MAIN.set('cat_dict', cat_dict);
+                    }
+                }
+        );
+    }
+    periodic_receive();
+    setInterval(periodic_receive, 10000);
+function send_cat(name, key) {
+    var call_draft_id = MAIN.get('draft_id');
+    $.ajax("{{=URL('default', 'add_cat', user_signature=True)}}",
+            {
+              data: {
+                name: name, // request.vars.name
+                draft_id: key
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {
+                  $.web2py.flash("cat submit error");
+              }
+            }
+    );
+  }
+    function update_catEdit(name, loc) {
+    $.ajax("{{=URL('default', 'update_cat', user_signature=True)}}",
+            {
+              data: {
+                name: name, // request.vars.name
+                loc: loc
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {
+                  $.web2py.flash("cat submit error");
+              }
+            }
+    );
+  }
+    function newCatHandle(name) {
+    $.ajax("{{=URL('default', 'newCatHandle', user_signature=True)}}",
+            {
+              data: {
+                name: name, // request.vars.name
+                draft_id: MAIN.get("editingKey")
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {
+                  $.web2py.flash("cat submit error");
+              }
+            }
+    );
+  }
+    function deletecat(key) {
+    $.ajax("{{=URL('default', 'deleteCat', user_signature=True)}}",
+            {
+              data: {
+                key: key,
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {
+                  $.web2py.flash("cat delete failure");
+              }
+            }
+    );
+  }
+  MAIN.on("startedit", function(e) {
+      var cat_dict = MAIN.get("cat_dict");
+      var key = $(e.node).data("iden");
+      if (cat_dict[key]["fromDB"]=="false"){
+          cat_dict[key]["name"] = "";
+      }
+      MAIN.set("editingKey", key);
+      cat_dict[key]["editing"] = true;
+      MAIN.set("cat_dict", cat_dict);
+      MAIN.set("oldCatName", cat_dict[key]["name"]);
+      $("#"+key).focus();
+      if(cat_dict[key]["fromDB"]=="True"){
+          periodic_send();
+      }
+      else{
+          periodic_sendNewCat();
+      }
+  });
+  function periodic_send(){
+      if((MAIN.get("cat_dict")[MAIN.get("editingKey")]["name"].trim().length != 0)&&(MAIN.get("cat_dict")[MAIN.get("editingKey")]["fromDB"]=="True")){
+         //alert(MAIN.get("editingKey")+"not new cat");
+          MAIN.set("oldCatName", MAIN.get("cat_dict")[MAIN.get("editingKey")]["name"]);
+          update_catEdit(MAIN.get("cat_dict")[MAIN.get("editingKey")]["name"], MAIN.get("editingKey"));
+      }
+  }
+    function periodic_sendNewCat(){
+      if((MAIN.get("cat_dict")[MAIN.get("editingKey")]["name"].trim().length != 0)&&(MAIN.get("cat_dict")[MAIN.get("editingKey")]["fromDB"]=="false")){
+          //alert(MAIN.get("editingKey")+"new cat");
+          MAIN.set("oldCatName", MAIN.get("cat_dict")[MAIN.get("editingKey")]["name"]);
+          newCatHandle(MAIN.get("cat_dict")[MAIN.get("editingKey")]["name"]);
+      }
+  }
+  setInterval(periodic_send, 1000);
+    setInterval(periodic_sendNewCat, 1000);
+  MAIN.on("editdone", function(e) {
+    //MAIN.set("editing", false);
+      MAIN.set("editingKey", -1);
+      var cat_dict = MAIN.get("cat_dict");
+      var key = $(e.node).data("iden");
+      cat_dict[key]["editing"] = false;
+      if((cat_dict[key]["name"].trim().length == 0) && (cat_dict[key]["fromDB"] == "false")){
+          delete cat_dict[key];
+          MAIN.set("cat_dict", cat_dict);
+      }
+      else if((cat_dict[key]["name"].trim().length == 0) && (cat_dict[key]["fromDB"] == "True")){
+          cat_dict[key]["name"] = MAIN.get("oldCatName");
+          MAIN.set("cat_dict", cat_dict);
+      }
+      else if (cat_dict[key]["fromDB"] == "false") {
+          send_cat(cat_dict[key]["name"], key);
+          periodic_receive();
+          delete cat_dict[key];
+      }
+      else if (cat_dict[key]["fromDB"] == "True"){
+          send_cat(cat_dict[key]["name"], cat_dict[key]["draft_id"]);
+          //delete cat_dict[key];
+          periodic_receive();
+      }
+      MAIN.set("cat_dict", cat_dict);
+  });
+    MAIN.on("addCat", function(e) {
+        var cat_dict = MAIN.get('cat_dict');
+        var cat_id = generateUUID();
+        cat_dict[cat_id]={'name':"Enter Cat Name", 'fromDB':"false", 'editable':"true", 'editing': false, 'key': cat_id, 'draft_id': cat_id};
+        MAIN.set('cat_dict',cat_dict);
+
+    });
+    // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+    function generateUUID(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now();; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
+});
+</script>

@@ -1,0 +1,66 @@
+/* line 1, ../sass/_main.scss */
+.colorful {
+  color: #bb8833;
+}
+
+/* line 4, ../sass/_main.scss */
+div.catList {
+  background: linear-gradient(#ffffff, #f5f5f5);
+  border: 2px solid;
+  margin-top: 50px;
+  margin-right: 30px;
+  padding: 20px;
+  width: 200px;
+  margin-outside: 50px;
+  display: inline-block;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  font-family: Arial;
+  list-style-type: none;
+  padding-left: 5px;
+}
+/* line 16, ../sass/_main.scss */
+div.catList .boardName {
+  font-size: x-large;
+}
+
+/* line 22, ../sass/_main.scss */
+textarea.noEdit {
+  background: linear-gradient(#ffffff, #f5f5f5);
+  resize: none;
+  border: none;
+  outline: none;
+}
+
+/* line 28, ../sass/_main.scss */
+p.displayCat {
+  height: 100px;
+  width: 50px;
+}
+
+/* line 33, ../sass/_main.scss */
+button.myButton {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+/* line 41, ../sass/_main.scss */
+button.redButton {
+  background-color: red;
+  border: black;
+}
+
+/* line 45, ../sass/_main.scss */
+.black {
+  color: black;
+}
+
+/* line 48, ../sass/_main.scss */
+.orange {
+  color: orange;
+}

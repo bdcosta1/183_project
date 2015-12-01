@@ -1,0 +1,365 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+<div id="target"></div>
+
+<script id="template" type="text/ractive">
+    {% #if loggedIn === "True" %}
+        <input class="btn btn-primary" type="submit" value="Create Post" on-click="addPost"/>
+    {% /if %}
+    {{=A('Go to Boards!', _class='submit', _href=URL('default', 'index'))}}
+    <div>
+        {% #post_dict:post_id %}
+            <div class="boardList">
+                {% #if editable %}
+                    <p><b>Post Title</b> (Click Title to Edit It):</p>
+                    {% #if editing %}
+                        <textarea id="{% key %}" on-blur="editdone" data-iden="{% key %}" value="{% name %}" rows="1" columns = "30"></textarea>
+                    {% /if %}
+                    {% #if editing === false %}
+                        <div on-click="startedit" data-iden="{% key %}"><p>{% name %}</p></div>
+                    {% /if %}
+                    <p><b>Post Description</b> (Click Description to Edit it):</p>
+                    {% #if editing1 %}
+                        <textarea id="{% key + "1" %}" on-blur="editdone1" data-iden="{% key %}" value="{% description %}" rows="1" columns = "30"></textarea>
+                    {% /if %}
+                    {% #if editing1 === false %}
+                        <div on-click="startedit1" data-iden="{% key %}"><p>{% description %}</p></div>
+                    {% /if %}
+                    <p><b>Created on:</b><br>{% created_on %}</p>
+                    {% #if markedDelete %}
+                        <button class = "myButton" data-iden="{% key %}" on-click = "unmarkDelete"><i class="fa fa-times orange"></i></button>
+                    {% /if %}
+                    {% #if markedDelete === false%}
+                        <button class = "myButton" data-iden="{% key %}" on-click = "markDelete"><i class="fa fa-times black"></i></button>
+                    {% /if %}
+                {% /if %}
+                {% #if editable === false %}
+                    <div><p><b>Post Title: </b></p><p>{% name %}</p></div>
+                    <div><p><b>Post Description: </b></p><p>{% description %}</p></div>
+                    <p><b>Created on:</b><br>{% created_on %}</p>
+                {% /if %}
+            </div>
+        {% /post_dict %}
+        {% #if showGarbage %}
+            <p><button class = "redButton" data-iden="{% key %}" on-click = "performDeletion"><i class="fa fa-trash-o"></i></button></p>
+        {% /if %}
+        {% #if loading %}
+            <i class="fa fa-spinner fa-pulse fa-4x"></i>
+        {% /if %}
+    </div>
+
+</script>
+<script>
+$(function() {
+  // Ractive object
+  var MAIN = new Ractive({
+    el: '#target',
+    template: '#template',
+    delimiters: ['{%', '%}'],
+    tripleDelimiters: ['{%%', '%%}'],
+    data: {
+        post_dict:{},
+        mytext: 'Enter Board Name',
+        loggedIn: "{{=loggedIn}}",
+        user_id: "{{=user_id}}",
+        oldPostName: "",
+        boardNum: "{{=boardNum}}",
+        editingKey: -1,
+        oldPostDescription: "",
+        showGarbage:false,
+        loading: true,
+        index: "index"
+
+    },
+  });
+    function periodic_receive() {
+        MAIN.set("loading", true);
+        numBoard =  MAIN.get("boardNum");
+        $.ajax("{{=URL('default', 'load_posts', user_signature=True)}}",
+                {
+                    data:{
+                        boardNum: numBoard
+                    },
+                    method: 'POST',
+                    success: function (data) {
+                        var oldRow = -1;
+                        if(MAIN.get("editingKey")!=-1){
+                            oldRow = MAIN.get("post_dict")[MAIN.get("editingKey")];
+                        }
+                        var post_dict = data['post_dict'];
+                        m = Object.keys(post_dict).length;
+                        var i;
+                        for (var key in post_dict){
+                            if(post_dict[key]["post_creator"]==MAIN.get('user_id')){
+                                post_dict[key]["editable"] = true;
+
+                            }
+                            else{
+                                post_dict[key]["editable"] = false;
+                            }
+                            if(key != MAIN.get("editingKey")){
+                                post_dict[key]["editing"] = false;
+                                post_dict[key]["editing1"] = false;
+                            }
+                            else{
+                                post_dict[key] = oldRow;
+                            }
+                            if(post_dict[key]["draft_id"] == MAIN.get("editingKey")){
+                                delete post_dict[key];
+                            }
+                            else {
+                                post_dict[key]["ident"] = post_dict[key]["draft_id"];
+                                post_dict[key]["key"] = key;
+                            }
+                            post_dict[key]["markedDelete"] = false;
+                        }
+                        if((!(MAIN.get("editingKey") in post_dict))&& (MAIN.get("editingKey")!= -1)){
+                            post_dict[MAIN.get("editingKey")] = oldRow;
+                        }
+                        MAIN.set('testvar', i);
+                        var old_dict = MAIN.get("post_dict");
+                        for (key in old_dict){
+                            if(key in post_dict){
+                               post_dict[key]["markedDelete"] = old_dict[key]["markedDelete"];
+                            }
+                            if(old_dict[key]["fromDB"]=="false"){
+                                post_dict[key] = old_dict[key];
+                            }
+                        }
+                        MAIN.set("loading", false);
+                        MAIN.set("post_dict", post_dict);
+                    }
+                }
+        );
+    }
+    periodic_receive();
+    setInterval(periodic_receive, 9000);
+    function send_post(name, key, description) {
+    var boardNum = MAIN.get('boardNum');
+    $.ajax("{{=URL('default', 'add_post', user_signature=True)}}",
+            {
+              data: {
+                name: name, // request.vars.name
+                draft_id: key,
+                boardNum : boardNum,
+                description: description
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {}
+            }
+    );
+  }
+    function update_postEdit(name, loc, description) {
+    $.ajax("{{=URL('default', 'update_post', user_signature=True)}}",
+            {
+              data: {
+                name: name, // request.vars.name
+                loc: loc,
+                description: description
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {}
+            }
+    );
+  }
+    function newPostHandle(name, description) {
+    $.ajax("{{=URL('default', 'newPostHandle', user_signature=True)}}",
+            {
+              data: {
+                name: name, // request.vars.name
+                draft_id: MAIN.get("editingKey"),
+                boardNum: MAIN.get("boardNum"),
+                description: description
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {
+                  $.web2py.flash("new post failure");
+              }
+            }
+    );
+  }
+    function deletePost(key) {
+    $.ajax("{{=URL('default', 'deletePost', user_signature=True)}}",
+            {
+              data: {
+                key: key,
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+              },
+              error: function() {
+                  $.web2py.flash("post deletion failure");
+              }
+            }
+    );
+  }
+
+    MAIN.on("startedit", function(e) {
+
+      var post_dict = MAIN.get("post_dict");
+      var key = $(e.node).data("iden");
+      if (post_dict[key]["fromDB"]=="false"){
+          post_dict[key]["name"] = "";
+      }
+      MAIN.set("editingKey", key);
+      post_dict[key]["editing"] = true;
+      post_dict[key]["editing1"] = false;
+      MAIN.set("post_dict", post_dict);
+      MAIN.set("oldPostName", post_dict[key]["name"]);
+      $("#"+key).focus();
+      if(post_dict[key]["fromDB"]=="True"){
+          periodic_send();
+      }
+      else{
+          periodic_sendNewPost();
+      }
+  });
+    MAIN.on("markDelete", function(e) {
+        var post_dict = MAIN.get("post_dict");
+        var key = $(e.node).data("iden");
+        post_dict[key]["markedDelete"] = true;
+        MAIN.set("post_dict", post_dict);
+        checkGarbage();
+    });
+    MAIN.on("unmarkDelete", function(e) {
+        var post_dict = MAIN.get("post_dict");
+        var key = $(e.node).data("iden");
+        post_dict[key]["markedDelete"] = false;
+        MAIN.set("post_dict", post_dict);
+        checkGarbage();
+    });
+    function checkGarbage(){
+        var post_dict = MAIN.get("post_dict");
+        var oneMarked = 0;
+        for (var key in post_dict){
+            if(post_dict[key]["markedDelete"] == true){
+                oneMarked = 1;
+            }
+        }
+        if (oneMarked == 1){
+            MAIN.set("showGarbage", true);
+        }
+        else{
+            MAIN.set("showGarbage", false);
+        }
+    }
+    MAIN.on("performDeletion", function(e) {
+        var post_dict = MAIN.get("post_dict");
+        for (var key in post_dict){
+            if(post_dict[key]["markedDelete"] == true){
+                delete post_dict[key];
+                deletePost(key);
+            }
+        }
+        MAIN.set("post_dict", post_dict);
+        checkGarbage();
+    });
+    MAIN.on("startedit1", function(e) {
+      var post_dict = MAIN.get("post_dict");
+      var key = $(e.node).data("iden");
+
+    MAIN.set("editingKey", key);
+            post_dict[key]["editing"] = false;
+      post_dict[key]["editing1"] = true;
+      MAIN.set("post_dict", post_dict);
+      MAIN.set("oldPostDescription", post_dict[key]["description"]);
+      $("#"+key+"1").focus();
+      if(post_dict[key]["fromDB"]=="True"){
+          periodic_send();
+      }
+  });
+  function periodic_send(){
+      if((MAIN.get("post_dict")[MAIN.get("editingKey")]["name"].trim().length != 0)&&(MAIN.get("post_dict")[MAIN.get("editingKey")]["fromDB"]=="True")){
+         //alert(MAIN.get("editingKey")+"not new Board");
+          MAIN.set("oldPostName", MAIN.get("post_dict")[MAIN.get("editingKey")]["name"]);
+
+          update_postEdit(MAIN.get("post_dict")[MAIN.get("editingKey")]["name"], MAIN.get("editingKey"),MAIN.get("post_dict")[MAIN.get("editingKey")]["description"]);
+          //periodic_receive();
+      }
+  }
+    function periodic_sendNewPost() {
+        if ((MAIN.get("post_dict")[MAIN.get("editingKey")]["name"].trim().length != 0) && (MAIN.get("post_dict")[MAIN.get("editingKey")]["fromDB"] == "false")) {
+            //alert(MAIN.get("editingKey")+"new Board");
+            MAIN.set("oldBoardName", MAIN.get("post_dict")[MAIN.get("editingKey")]["name"]);
+            newPostHandle(MAIN.get("post_dict")[MAIN.get("editingKey")]["name"], MAIN.get("post_dict")[MAIN.get("editingKey")]["description"]);
+        }
+    }
+
+  setInterval(periodic_send, 10000);
+    setInterval(periodic_sendNewPost, 2000);
+  MAIN.on("editdone", function(e) {
+      //MAIN.set("editing", false);
+
+      var post_dict = MAIN.get("post_dict");
+      var key = $(e.node).data("iden");
+      post_dict[key]["editing"] = false;
+      if ((post_dict[key]["name"].trim().length == 0) && (post_dict[key]["fromDB"] == "false")) {
+          delete post_dict[key];
+          MAIN.set("post_dict", post_dict);
+      }
+      else if ((post_dict[key]["name"].trim().length == 0) && (post_dict[key]["fromDB"] == "True")) {
+          post_dict[key]["name"] = MAIN.get("oldPostName");
+          MAIN.set("post_dict", post_dict);
+      }
+      else if (post_dict[key]["fromDB"] == "false") {
+          send_post(post_dict[key]["name"], key, post_dict[key]["description"]);
+          periodic_receive();
+          delete post_dict[key];
+          MAIN.set("post_dict", post_dict);
+      }
+      else if (post_dict[key]["fromDB"] == "True") {
+          send_post(post_dict[key]["name"], post_dict[key]["draft_id"], post_dict[key]["description"]);
+          //delete post_dict[key];
+          //MAIN.set("post_dict", post_dict);
+          //periodic_receive();
+      }
+     MAIN.set("editingKey", -1);
+      MAIN.set("post_dict", post_dict);
+  });
+    MAIN.on("editdone1", function(e) {
+      //MAIN.set("editing", false);
+      MAIN.set("editingKey", -1);
+      var post_dict = MAIN.get("post_dict");
+      var key = $(e.node).data("iden");
+      post_dict[key]["editing1"] = false;
+
+      if ((post_dict[key]["description"].trim().length == 0) && (post_dict[key]["fromDB"] == "True")) {
+          post_dict[key]["description"] = "No Description";
+          send_post(post_dict[key]["name"], post_dict[key]["draft_id"], post_dict[key]["description"]);
+      }
+      else if (post_dict[key]["fromDB"] == "True") {
+          send_post(post_dict[key]["name"], post_dict[key]["draft_id"], post_dict[key]["description"]);
+          //delete board_dict[key];
+      }
+      MAIN.set("post_dict", post_dict);
+  });
+    MAIN.on("addPost", function(e) {
+        var post_dict = MAIN.get("post_dict");
+        var post_id = generateUUID();
+        post_dict[post_id]={'name':"Enter Post Name", 'description': "description", 'fromDB':"false", 'editable':"true", 'editing': false, 'editing1':false, 'key': post_id, 'draft_id': post_id};
+        MAIN.set("post_dict",post_dict);
+    });
+    function generateUUID(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now();; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
+});
+</script>
