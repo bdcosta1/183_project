@@ -1,9 +1,38 @@
 /* line 1, ../sass/_main.scss */
+.main_login {
+  margin-top: -60px;
+  margin-bottom: 0px;
+}
+
+/* line 6, ../sass/_main.scss */
+div p {
+  color: white;
+  font-size: 35px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black,0 0 25px black, 0 0 5px darkblue;
+}
+
+/* line 13, ../sass/_main.scss */
+div img {
+  margin-bottom: 40px;
+}
+
+/*Style of the features below the map*/
+/* line 17, ../sass/_main.scss */
+.Ratings .row .col-md-4 .thumbnail p {
+  color: #3f94bb;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: Monospace;
+  font-size: 35px;
+}
+
+/* line 25, ../sass/_main.scss */
 .colorful {
   color: #bb8833;
 }
 
-/* line 4, ../sass/_main.scss */
+/* line 30, ../sass/_main.scss */
 div.catList {
   background: linear-gradient(#ffffff, #f5f5f5);
   border: 2px solid;
@@ -20,12 +49,12 @@ div.catList {
   list-style-type: none;
   padding-left: 5px;
 }
-/* line 16, ../sass/_main.scss */
+/* line 42, ../sass/_main.scss */
 div.catList .boardName {
   font-size: x-large;
 }
 
-/* line 22, ../sass/_main.scss */
+/* line 48, ../sass/_main.scss */
 textarea.noEdit {
   background: linear-gradient(#ffffff, #f5f5f5);
   resize: none;
@@ -33,13 +62,13 @@ textarea.noEdit {
   outline: none;
 }
 
-/* line 28, ../sass/_main.scss */
+/* line 54, ../sass/_main.scss */
 p.displayCat {
   height: 100px;
   width: 50px;
 }
 
-/* line 33, ../sass/_main.scss */
+/* line 59, ../sass/_main.scss */
 button.myButton {
   background-color: Transparent;
   background-repeat: no-repeat;
@@ -49,18 +78,18 @@ button.myButton {
   outline: none;
 }
 
-/* line 41, ../sass/_main.scss */
+/* line 67, ../sass/_main.scss */
 button.redButton {
   background-color: red;
   border: black;
 }
 
-/* line 45, ../sass/_main.scss */
+/* line 71, ../sass/_main.scss */
 .black {
   color: black;
 }
 
-/* line 48, ../sass/_main.scss */
+/* line 74, ../sass/_main.scss */
 .orange {
   color: orange;
 }

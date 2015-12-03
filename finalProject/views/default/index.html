@@ -1,85 +1,49 @@
-{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
-<div id="target"></div>
 
-<script id="template" type="text/ractive">
-    {% #if loggedIn === "True" %}
-        <input class="btn btn-primary" type="submit" value="Create New Post"/>
-    {% /if %}
-    <div>
-        {% #cat_dict:cat_id %}
-            <div class="catList">
-                {% #if editable %}
-                    <p><b>Cat Title</b><button data-iden="{% key %}" on-click = "markDelete"><i class="fa fa-pencil"></i></button></p>
-                    <div data-iden="{% key %}"><p class = "displayCat">{% name %}</p></div>
+<!--Show the logo for our team-->
 
-                {% /if %}
-                {% #if editable === false %}
-                    <p><b>Cat Title</b></p>
-                    <div><p class = "displayCat">{% name %}</p></div>
-                {% /if %}
-                    <a href="{% "posts" %}">View More details</a>
-            </div>
-        {% /cat_dict %}
+{{for img_info in image_list:}}
+    <div id="logo" align="middle">
+        <p>
+            Rent A Cat
+        </p>
+            <img src="{{=img_info['url']}}" style="height: 200px"/>
     </div>
+{{pass}}
 
-</script>
+<!--3 different features: Adding Your Own Cat, Viewing Board, Signing In/Out-->
+    <div class = "Ratings">
+        <div class= "row">
 
-<script>
-$(function() {
-    // Ractive object
-    var MAIN = new Ractive({
-        el: '#target',
-        template: '#template',
-        delimiters: ['{%', '%}'],
-        tripleDelimiters: ['{%%', '%%}'],
-        data: {
-            cat_dict: {},
-            mytext: 'Enter Cat Name',
-            loggedIn: "{{=loggedIn}}",
-            user_id: "{{=user_id}}",
-            oldCatName: "",
-            editingKey: -1
-        },
-    });
+            <div class="col-md-4">
+                <div class="thumbnail" align="middle">
+                    <p>{{=A('Add Your Own Cat', _href=URL('default', 'post'))}}</p>
+                    <img src="https://bytebucket.org/snippets/asilva3/4Laod/raw/61e9a87e6d04c92a3cfee1d29e600b5a74fdaf95/heart-icon.jpg">
+                </div>
+            </div>
 
-    function periodic_receive() {
-        $.ajax("{{=URL('default', 'load_cats', user_signature=True)}}",
-                {
-                    method: 'POST',
-                    success: function (data) {
-                        var oldRow = -1;
-                        if (MAIN.get("editingKey") != -1) {
-                            oldRow = MAIN.get("cat_dict")[MAIN.get("editingKey")];
-                        }
-                        var cat_dict = data['cat_dict'];
-                        m = Object.keys(cat_dict).length;
-                        var i;
-                        for (var key in cat_dict) {
-                            if (cat_dict[key]["cat_creator"] == MAIN.get('user_id')) {
-                                cat_dict[key]["editable"] = true;
-                            }
-                            else {
-                                cat_dict[key]["editable"] = false;
-                            }
-                            cat_dict[key]["ident"] = cat_dict[key]["draft_id"];
-                            cat_dict[key]["key"] = key;
+            <div class="col-md-4" align="middle">
+                <div class="thumbnail">
+                    <div class = "Leader">
+                        <p>{{=A('View Cats', _class='white', _href=URL('default', 'post'))}}</p>
+                        <img src="https://bytebucket.org/snippets/asilva3/yqaoG/raw/febcf5311336719b7648dfc779fbb2eeb3a5a5e1/yeye.jpg" height="100" width="300" class="img-rounded">
+                    </div>
+                </div>
+            </div>
 
-                        }
+            <div class="col-md-4">
+                <div class="thumbnail" align="middle">
+                    {{if auth.user_id is not None:}}
+                        <p> {{=A('Logout',  _href=URL('default', 'user', args=['logout']))}}</p>
+                        <img src="http://cdn.osxdaily.com/wp-content/uploads/2013/07/contacts-icon.jpg" width="100" height="10">
+                    {{else:}}
+                        <p> {{=A('Log In',  _href=URL('default', 'user', args=['login']))}} Or
+                            {{=A('Sign In',  _href=URL('default', 'user', args=['register']))}}
+                        </p>
+                        <img src="http://cdn.osxdaily.com/wp-content/uploads/2013/07/contacts-icon.jpg" width="100" height="10">
+                    {{pass}}
+                </div>
+            </div>
 
-                        MAIN.set('cat_dict', cat_dict);
-                    }
-                }
-        );
-    }
-
-    periodic_receive();
-    setInterval(periodic_receive, 10000);
-
-})
-
-
-
-
-
-</script>
+        </div>
+    </div>

@@ -1,6 +1,32 @@
+.main_login{
+    margin-top: -60px;
+    margin-bottom: 0px;
+}
+
+div p{
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px black,0 0 25px black, 0 0 5px darkblue;
+}
+
+div img{
+    margin-bottom: 40px;
+}
+/*Style of the features below the map*/
+.Ratings .row .col-md-4 .thumbnail p{
+    color: $clrtextblue;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: Monospace;
+    font-size:35px;
+}
+
 .colorful {
   color: $clrHilight;
 }
+
+
 div.catList{
     background: linear-gradient(white, whitesmoke);
     border: 2px solid;
