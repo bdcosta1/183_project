@@ -41,6 +41,17 @@ def load_cats():
     d = {r.id: {'name': r.name, 'fromDB': r.fromDB, 'cat_creator': r.cat_creator, 'draft_id': r.draft_id}
          for r in rows}
     return response.json(dict(cat_dict=d))
+    
+def add_cat():
+    form = SQLFORM(db.cat)
+
+    if form.process().accepted:
+        session.flash = T('The data was inserted')
+        redirect(URL('default', 'index'))
+    else:
+        session.flash = T('dumb')
+
+    return dict(form=form)
 
 
 def user():
