@@ -48,8 +48,8 @@ def add_cat():
     if form.process().accepted:
         session.flash = T('The data was inserted')
         redirect(URL('default', 'index'))
-    else:
-        session.flash = T('dumb')
+    elif form.errors:
+        session.flash = T('The data was not inserted')
 
     return dict(form=form)
 
