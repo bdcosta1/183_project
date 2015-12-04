@@ -19,15 +19,11 @@ def index():
         ))
     return dict(image_list=image_list)
 
-@auth.requires_signature()
-def add_cat():
-    db.cats.update_or_insert((db.cats.draft_id == request.vars.draft_id), name = request.vars.name, draft_id=request.vars.draft_id, cat_creator=auth.user_id)
-    return "ok"
-
-@auth.requires_signature()
-def newCatHandle():
-    db.cats.update_or_insert((db.cats.draft_id == request.vars.draft_id), name = request.vars.name, draft_id = request.vars.draft_id, cat_creator=auth.user_id)
-    return "ok"
+def listings():
+    loggedIn = True
+    if auth.user_id is None:
+        loggedIn = False
+    return dict(loggedIn=loggedIn, user_id=auth.user_id)
 
 @auth.requires_signature()
 def update_cat():
@@ -37,8 +33,17 @@ def update_cat():
 
 def load_cats():
     """Loads all messages for the user."""
-    rows = db(db.cats).select()
-    d = {r.id: {'name': r.name, 'fromDB': r.fromDB, 'cat_creator': r.cat_creator, 'draft_id': r.draft_id}
+    if request.vars.stateLoc == "All States" and request.vars.breed == "All Breeds":
+        rows = db(db.cats).select()
+    elif request.vars.stateLoc == "All States":
+        rows = db(db.cats.breed == request.vars.breed).select()
+    elif request.vars.breed == "All Breeds":
+        rows = db(db.cats.stateLoc == request.vars.stateLoc).select()
+    else:
+        rows = db((db.cats.stateLoc == request.vars.stateLoc) & (db.cats.breed == request.vars.breed)).select()
+
+    d = {r.id: {'name': r.name, 'fromDB': r.fromDB, 'cat_creator': r.cat_creator, 'draft_id': r.draft_id, 'breed':
+        r.breed, 'stateLoc': r.stateLoc}
          for r in rows}
     return response.json(dict(cat_dict=d))
     

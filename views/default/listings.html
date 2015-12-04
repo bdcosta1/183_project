@@ -1,0 +1,109 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+<div id="target"></div>
+
+<script id="template" type="text/ractive">
+    <div class="sortBox">
+        <p>{% breedSelected %} {% stateSelected %}</p>
+        <select id = "breedSelect">
+            <option value = "All Breeds">All Breeds</option>
+            <option value = "breed1">breed1</option>
+            <option value = "bread2">breed2</option>
+        </select>
+        <span>
+        <select id = "stateSelect">
+            <option value = "All States">All States</option>
+            <option value = "California">California</option>
+            <option value = "Washington">Washington</option>
+            <option value = "Oregon">Oregon</option>
+        </select>
+        <input class="btn btn-primary" type="submit" value="Search" on-click="filterResults"/>
+
+    </div>
+    {% #if loggedIn === "True" %}
+        <input class="btn btn-primary" type="submit" value="Create New Post"/>
+    {% /if %}
+    <div>
+        {% #cat_dict:cat_id %}
+            <div class="catList">
+                {% #if editable %}
+                    <p><b>Cat Title</b><button data-iden="{% key %}"><i class="fa fa-pencil"></i></button></p>
+                    <div data-iden="{% key %}"><p class = "displayCat">{% name %}</p></div>
+
+                {% /if %}
+                {% #if editable === false %}
+                    <p><b>Cat Title</b></p>
+                    <div><p class = "displayCat">{% name %}</p></div>
+                {% /if %}
+                    <p>{% breed %} {% stateLoc %}</p>
+                    <a href="{% "posts" %}">View More details</a>
+            </div>
+        {% /cat_dict %}
+    </div>
+
+</script>
+
+<script>
+$(function() {
+    // Ractive object
+    var MAIN = new Ractive({
+        el: '#target',
+        template: '#template',
+        delimiters: ['{%', '%}'],
+        tripleDelimiters: ['{%%', '%%}'],
+        data: {
+            cat_dict: {},
+            mytext: 'Enter Cat Name',
+            loggedIn: "{{=loggedIn}}",
+            user_id: "{{=user_id}}",
+            oldCatName: "",
+            editingKey: -1,
+            stateSelected: "All States",
+            breedSelected: "All Breeds"
+        },
+    });
+
+    function periodic_receive() {
+        $.ajax("{{=URL('default', 'load_cats', user_signature=True)}}",
+                {
+                    data:{
+                        breed: MAIN.get("breedSelected"),
+                        stateLoc: MAIN.get("stateSelected")
+                    },
+                    method: 'POST',
+                    success: function (data) {
+                        var oldRow = -1;
+                        if (MAIN.get("editingKey") != -1) {
+                            oldRow = MAIN.get("cat_dict")[MAIN.get("editingKey")];
+                        }
+                        var cat_dict = data['cat_dict'];
+                        m = Object.keys(cat_dict).length;
+                        var i;
+                        for (var key in cat_dict) {
+                            if (cat_dict[key]["cat_creator"] == MAIN.get('user_id')) {
+                                cat_dict[key]["editable"] = true;
+                            }
+                            else {
+                                cat_dict[key]["editable"] = false;
+                            }
+                            cat_dict[key]["ident"] = cat_dict[key]["draft_id"];
+                            cat_dict[key]["key"] = key;
+
+                        }
+
+                        MAIN.set('cat_dict', cat_dict);
+                    }
+                }
+        );
+    }
+    periodic_receive();
+    setInterval(periodic_receive, 10000);
+    MAIN.on("filterResults", function(e) {
+        MAIN.set("breedSelected",document.getElementById("breedSelect").value);
+        MAIN.set("stateSelected",document.getElementById("stateSelect").value);
+        periodic_receive();
+    });
+
+});
+
+</script>
