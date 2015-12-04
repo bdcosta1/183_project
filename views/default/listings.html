@@ -7,15 +7,31 @@
         <p>{% breedSelected %} {% stateSelected %}</p>
         <select id = "breedSelect">
             <option value = "All Breeds">All Breeds</option>
-            <option value = "breed1">breed1</option>
-            <option value = "bread2">breed2</option>
+            <option value = "Abyssinian">Abyssinian</option><option value = "American Bobtail">American Bobtail</option><option value = "American Curl ">American Curl </option><option value = "American Shorthair">American Shorthair</option><option value = "American Wirehair">American Wirehair</option>
+            <option value = "Balinese">Balinese</option><option value = "Bengal">Bengal</option><option value = "Birman">Birman</option><option value = "Bombay">Bombay</option><option value = "British Shorthair">British Shorthair</option>
+            <option value = "Burmese">Burmese</option><option value = "Charteux">Charteux</option><option value = "Chausie">Chausie</option><option value = "Colorpoint">Colorpoint</option><option value = "Cornish Rex">Cornish Rex</option>
+            <option value = "Cymric">Cymric</option><option value = "Devon Rex">Devon Rex</option><option value = "Egyptian Mau">Egyptian Mau</option><option value = "Exotic Shorthair">Exotic Shorthair</option><option value = "Havana Brown">Havana Brown</option>
+            <option value = "Himalayan">Himalayan</option><option value = "Japanese Bobtail">Japanese Bobtail</option><option value = "Javanese">Javanese</option><option value = "Korat">Korat</option><option value = "LaPerm">LaPerm</option>
+            <option value = "Maine Coon">Maine Coon</option><option value = "Manx">Manx</option><option value = "Munchkin">Munchkin</option><option value = "Nebelung">Nebelung</option><option value = "Norwegian Forrest">Norwegian Forrest</option>
+            <option value = "Ocicat">Ocicat</option><option value = "Oriental Shorthair">Oriental Shorthair</option><option value = "Persian">Persian</option><option value = "Peterbald">Peterbald</option><option value = "Pixie-Bob">Pixie-Bob</option>
+            <option value = "Ragamuffin">Ragamuffin</option><option value = "Ragdoll">Ragdoll</option><option value = "Russian Blue">Russian Blue</option><option value = "Savannah">Savannah</option><option value = "Scottish Fold">Scottish Fold</option>
+            <option value = "Selkirk Rex">Selkirk Rex</option><option value = "Siamese">Siamese</option><option value = "Siberian">Siberian</option><option value = "Singapura">Singapura</option><option value = "Snowshoe">Snowshoe</option><option value = "Somali">Somali</option>
+            <option value = "Sphynx">Sphynx</option><option value = "Tonkinese">Tonkinese</option><option value = "Toyger">Toyger</option><option value = "Turkish Angora">Turkish Angora</option><option value = "Turkish Van">Turkish Van</option>
         </select>
         <span>
         <select id = "stateSelect">
             <option value = "All States">All States</option>
-            <option value = "California">California</option>
-            <option value = "Washington">Washington</option>
-            <option value = "Oregon">Oregon</option>
+            <option value = "AL">AL</option><option value = "AK">AK</option><option value = "AZ">AZ</option><option value = "AR">AR</option><option value = "CA">CA</option>
+            <option value = "CO">CO</option><option value = "CT">CT</option><option value = "DE">DE</option><option value = "FL">FL</option><option value = "GA">GA</option>
+            <option value = "HI">HI</option><option value = "ID">ID</option><option value = "IL">IL</option><option value = "IN">IN</option><option value = "IA">IA</option>
+            <option value = "KS">KS</option><option value = "KY">KY</option><option value = "LA">LA</option><option value = "ME">ME</option><option value = "MD">MD</option>
+            <option value = "MA">MA</option><option value = "MI">MI</option><option value = "MN">MN</option><option value = "MS">MS</option><option value = "MO">MO</option>
+            <option value = "MT">MT</option><option value = "NE">NE</option><option value = "NV">NV</option><option value = "NH">NH</option><option value = "NJ">NJ</option>
+            <option value = "NM">NM</option><option value = "NY">NY</option><option value = "NC">NC</option><option value = "ND">ND</option><option value = "OH">OH</option>
+            <option value = "OK">OK</option><option value = "OR">OR</option><option value = "PA">PA</option><option value = "RI">RI</option><option value = "SC">SC</option>
+            <option value = "SD">SD</option><option value = "TN">TN</option><option value = "TX">TX</option><option value = "UT">UT</option><option value = "VT">VT</option>
+            <option value = "VA">VA</option><option value = "WA">WA</option><option value = "WV">WV</option><option value = "WI">WI</option><option value = "WY">WY</option>
+
         </select>
         <input class="btn btn-primary" type="submit" value="Search" on-click="filterResults"/>
 
@@ -35,7 +51,7 @@
                     <p><b>Cat Title</b></p>
                     <div><p class = "displayCat">{% name %}</p></div>
                 {% /if %}
-                    <p>{% breed %} {% stateLoc %}</p>
+                    <p>{% Breed %} {% Place %}</p>
                     <a href="{% "posts" %}">View More details</a>
             </div>
         {% /cat_dict %}
@@ -67,8 +83,8 @@ $(function() {
         $.ajax("{{=URL('default', 'load_cats', user_signature=True)}}",
                 {
                     data:{
-                        breed: MAIN.get("breedSelected"),
-                        stateLoc: MAIN.get("stateSelected")
+                        Breed: MAIN.get("breedSelected"),
+                        Place: MAIN.get("stateSelected")
                     },
                     method: 'POST',
                     success: function (data) {
