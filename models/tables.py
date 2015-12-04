@@ -16,19 +16,23 @@
 #########################################################################
 from datetime import datetime
 
-cat_breeds = ['Siamese', 'Persian', 'British Shorthair', 'Abyssinian', 'Maine Coon', 'American Shorthair', 'Bengal', 'Sphynx', 'Ragdoll', 'Exotic Shorthair', 'Burmese', 'Scottish Fold', 'Birman', 'Siberian','Russian Blue', 'Norwegian Forrest', 'Himalayan', 'Turkish Angora', 'Munchkin']
+cat_breeds = ['Abyssinian', 'American Bobtail','American Curl','American Shorthair','American Wirehair','Balinese','Bengal','Birman','Bombay',
+'British Shorthair', 'Burmese','Charteux','Chausie','Colorpoint','Cornish Rex','Cymric','Devon Rex','Egyptian Mau','Exotic Shorthair',
+'Havana Brown','Himalayan', 'Japanese Bobtail','Javanese','Korat','LaPerm','Maine Coon','Manx','Munchkin','Nebelung','Norwegian Forrest','Ocicat',
+'Oriental Shorthair','Persian','Peterbald','Pixie-Bob','Ragamuffin','Ragdoll', 'Russian Blue','Savannah','Scottish Fold','Selkirk Rex','Siamese',
+'Siberian','Singapura', 'Snowshoe','Somali','Sphynx','Tonkinese','Toyger', 'Turkish Angora','Turkish Van']
 states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY','LA', 'ME', 'ME','MD','MA','MI','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
 
 
 db.define_table('cat',
-                Field('Name'),
+                Field('Place', requires=IS_IN_SET(states)),
                 Field('Breed', requires=IS_IN_SET(cat_breeds)),
+                Field('Name'),
                 Field('Bio', 'text'),
                 Field('Age', 'integer'),
-                Field('place', requires=IS_IN_SET(states)),
                 Field('Price', 'integer'),
-                Field('rating', readable =False, writable=False),
-                Field('image', 'upload'),
+                Field('Rating', readable =False, writable=False),
+                Field('Image', 'upload'),
                 Field('human', db.auth_user, default=auth.user_id, readable =False, writable=False)
                 )
 db.define_table('cats',

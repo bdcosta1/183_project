@@ -27,23 +27,50 @@ def listings():
 
 @auth.requires_signature()
 def update_cat():
-    row = db(db.cats.id == request.vars.loc).select().first()
-    row.update_record(name = request.vars.name)
+    row = db(db.cat.id == request.vars.loc).select().first()
+    row.update_record(Name = request.vars.Name)
     return "ok"
 
 def load_cats():
     """Loads all messages for the user."""
-    if request.vars.stateLoc == "All States" and request.vars.breed == "All Breeds":
-        rows = db(db.cats).select()
-    elif request.vars.stateLoc == "All States":
-        rows = db(db.cats.breed == request.vars.breed).select()
-    elif request.vars.breed == "All Breeds":
-        rows = db(db.cats.stateLoc == request.vars.stateLoc).select()
-    else:
-        rows = db((db.cats.stateLoc == request.vars.stateLoc) & (db.cats.breed == request.vars.breed)).select()
+    rows = db(db.cat).select()
 
-    d = {r.id: {'name': r.name, 'fromDB': r.fromDB, 'cat_creator': r.cat_creator, 'draft_id': r.draft_id, 'breed':
-        r.breed, 'stateLoc': r.stateLoc}
+    Place = request.vars.Place
+    Breed = request.vars.Breed
+    #Age = request.vars.Age
+    #Rating = request.vars.Rating
+    #Price = request.vars.Price
+    if Place == "All States":
+        Place = ''
+    else:
+        Place = Place + ' and '
+
+    # if Age == "All Ages":
+    #     Age = ''
+    # else:
+    #     Age = Age + ' and '
+    #
+    # if Rating = "All Ratings":
+    #     Rating = ''
+    # else:
+    #     Rating = Rating + ' and '
+    #
+    # if Price = "All Prices":
+    #     Price = ''
+    # else:
+    #     Price = Price + ' and '
+
+    if Breed == "All Breeds":
+        Breed = ''
+
+    sql = Place + Breed
+    if sql == "":
+        sql = "*"
+    rows = db.executesql('SELECT "sql" FROM cat;')
+
+    print sql
+
+    d = {r.id: {'Name': r.Name, 'human': r.human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Price':r.Price, 'Bio': r.Bio, 'Rating':r.Rating, 'Image': r.Image}
          for r in rows}
     return response.json(dict(cat_dict=d))
     
