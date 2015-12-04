@@ -20,5 +20,7 @@ db.define_table('cats',
                 Field('name', 'text'),
                 Field('fromDB', 'text', default=True),
                 Field('cat_creator', 'text'),
+                Field('breed', 'text'),
+                Field('stateLoc', 'text'),
                 Field('draft_id', 'text')
             )
