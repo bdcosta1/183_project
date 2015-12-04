@@ -22,6 +22,7 @@ cat_breeds = ['Abyssinian', 'American Bobtail','American Curl','American Shortha
 'Oriental Shorthair','Persian','Peterbald','Pixie-Bob','Ragamuffin','Ragdoll', 'Russian Blue','Savannah','Scottish Fold','Selkirk Rex','Siamese',
 'Siberian','Singapura', 'Snowshoe','Somali','Sphynx','Tonkinese','Toyger', 'Turkish Angora','Turkish Van']
 states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY','LA', 'ME', 'ME','MD','MA','MI','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
+ages = ['<1','1','2','3','4','5','6','7+']
 
 
 db.define_table('cat',
@@ -29,11 +30,11 @@ db.define_table('cat',
                 Field('Breed', requires=IS_IN_SET(cat_breeds)),
                 Field('Name'),
                 Field('Bio', 'text'),
-                Field('Age', 'integer'),
+                Field('Age', requires=IS_IN_SET(ages)),
                 Field('Price', 'integer'),
                 Field('Rating', readable =False, writable=False),
                 Field('Image', 'upload'),
-                Field('human', db.auth_user, default=auth.user_id, readable =False, writable=False)
+                Field('Human', db.auth_user, default=auth.user_id, readable =False, writable=False)
                 )
 db.define_table('cats',
                 Field('name', 'text'),

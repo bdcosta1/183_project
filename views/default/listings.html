@@ -4,7 +4,7 @@
 
 <script id="template" type="text/ractive">
     <div class="sortBox">
-        <p>{% breedSelected %} {% stateSelected %}</p>
+        <p>{% breedSelected %} {% stateSelected %} {% ageSelected %}</p>
         <select id = "breedSelect">
             <option value = "All Breeds">All Breeds</option>
             <option value = "Abyssinian">Abyssinian</option><option value = "American Bobtail">American Bobtail</option><option value = "American Curl ">American Curl </option><option value = "American Shorthair">American Shorthair</option><option value = "American Wirehair">American Wirehair</option>
@@ -32,6 +32,12 @@
             <option value = "SD">SD</option><option value = "TN">TN</option><option value = "TX">TX</option><option value = "UT">UT</option><option value = "VT">VT</option>
             <option value = "VA">VA</option><option value = "WA">WA</option><option value = "WV">WV</option><option value = "WI">WI</option><option value = "WY">WY</option>
 
+        </select>
+        <span>
+        <select id = "ageSelect">
+            <option value = "All Ages">All Ages</option>
+            <option value = "less than 1">less than 1</option><option value = "1">1</option><option value = "2">2</option><option value = "3">3</option><option value = "4">4</option>
+            <option value = "5">5</option><option value = "6">6</option><option value = "greater than 7">greater than 7</option>
         </select>
         <input class="btn btn-primary" type="submit" value="Search" on-click="filterResults"/>
 
@@ -84,7 +90,8 @@ $(function() {
                 {
                     data:{
                         Breed: MAIN.get("breedSelected"),
-                        Place: MAIN.get("stateSelected")
+                        Place: MAIN.get("stateSelected"),
+                        Age: MAIN.get("ageSelected")
                     },
                     method: 'POST',
                     success: function (data) {
@@ -96,7 +103,7 @@ $(function() {
                         m = Object.keys(cat_dict).length;
                         var i;
                         for (var key in cat_dict) {
-                            if (cat_dict[key]["cat_creator"] == MAIN.get('user_id')) {
+                            if (cat_dict[key]["Human"] == MAIN.get('user_id')) {
                                 cat_dict[key]["editable"] = true;
                             }
                             else {

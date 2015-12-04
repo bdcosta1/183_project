@@ -45,11 +45,11 @@ def load_cats():
     else:
         Place = Place + ' and '
 
-    # if Age == "All Ages":
+    #if Age == "All Ages":
     #     Age = ''
-    # else:
+    #else:
     #     Age = Age + ' and '
-    #
+
     # if Rating = "All Ratings":
     #     Rating = ''
     # else:
@@ -70,7 +70,7 @@ def load_cats():
 
     print sql
 
-    d = {r.id: {'Name': r.Name, 'human': r.human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Price':r.Price, 'Bio': r.Bio, 'Rating':r.Rating, 'Image': r.Image}
+    d = {r.id: {'Name': r.Name, 'Human': r.human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Price':r.Price, 'Bio': r.Bio, 'Rating':r.Rating, 'Image': r.Image}
          for r in rows}
     return response.json(dict(cat_dict=d))
     
