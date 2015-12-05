@@ -6,6 +6,8 @@ from gluon.dal import Rows, Row
 import json
 import time
 
+auth.settings.formstyle = 'bootstrap'
+
 #cat logo
 IMAGE_URLS = [
     'https://bytebucket.org/snippets/asilva3/dRaMR/raw/5bfc5bd1022ac994124c34a96dab8b64c3c21d3f/cat.jpg?token=242a74d3b8bfad90400f1a8a5eac9ff7a0924d3a',
@@ -19,6 +21,20 @@ def index():
             id=i,
         ))
     return dict(image_list=image_list)
+
+def user_profile():
+    id = auth.user_id
+    info = db(db.auth_user.id==id).select()
+    return dict(info=info)
+
+def add_user_info():
+    form = SQLFORM(db.user_info)
+    if form.process().accepted:
+        session.flash = T('The data was inserted')
+        redirect(URL('default', 'user_profile'))
+    elif form.errors:
+        session.flash = T('The data was not inserted')
+    return dict(form=form)
 
 def listings():
     loggedIn = True
@@ -85,11 +101,6 @@ def load_cats():
         else:
             s = s + val
 
-    # print str
-    #
-    # sql = place + Age + breed
-
-    #print "SELECT * FROM cat WHERE " + s +";"
     if s == "":
         rows = db(db.cat).select()
         d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image}
@@ -107,7 +118,6 @@ def load_cats():
     
 def add_cat():
     form = SQLFORM(db.cat)
-
     if form.process().accepted:
         session.flash = T('The data was inserted')
         redirect(URL('default', 'index'))
