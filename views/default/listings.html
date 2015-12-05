@@ -7,7 +7,7 @@
         <p>{% breedSelected %} {% stateSelected %} {% ageSelected %}</p>
         <select id = "breedSelect">
             <option value = "All Breeds">All Breeds</option>
-            <option value = "Abyssinian">Abyssinian</option><option value = "American Bobtail">American Bobtail</option><option value = "American Curl ">American Curl </option><option value = "American Shorthair">American Shorthair</option><option value = "American Wirehair">American Wirehair</option>
+            <option value = "Abyssinian">Abyssinian</option><option value = "American Bobtail">American Bobtail</option><option value = "American Curl">American Curl </option><option value = "American Shorthair">American Shorthair</option><option value = "American Wirehair">American Wirehair</option>
             <option value = "Balinese">Balinese</option><option value = "Bengal">Bengal</option><option value = "Birman">Birman</option><option value = "Bombay">Bombay</option><option value = "British Shorthair">British Shorthair</option>
             <option value = "Burmese">Burmese</option><option value = "Charteux">Charteux</option><option value = "Chausie">Chausie</option><option value = "Colorpoint">Colorpoint</option><option value = "Cornish Rex">Cornish Rex</option>
             <option value = "Cymric">Cymric</option><option value = "Devon Rex">Devon Rex</option><option value = "Egyptian Mau">Egyptian Mau</option><option value = "Exotic Shorthair">Exotic Shorthair</option><option value = "Havana Brown">Havana Brown</option>
@@ -57,7 +57,7 @@
                     <p><b>Cat Title</b></p>
                     <div><p class = "displayCat">{% name %}</p></div>
                 {% /if %}
-                    <p>{% Breed %} {% Place %}</p>
+                    <p>{% Breed %} {% Place %} {% Age %}</p>
                     <a href="{% "posts" %}">View More details</a>
             </div>
         {% /cat_dict %}
@@ -81,7 +81,8 @@ $(function() {
             oldCatName: "",
             editingKey: -1,
             stateSelected: "All States",
-            breedSelected: "All Breeds"
+            breedSelected: "All Breeds",
+            ageSelected: "ALL Ages",
         },
     });
 
@@ -124,6 +125,7 @@ $(function() {
     MAIN.on("filterResults", function(e) {
         MAIN.set("breedSelected",document.getElementById("breedSelect").value);
         MAIN.set("stateSelected",document.getElementById("stateSelect").value);
+        MAIN.set("ageSelected",document.getElementById("ageSelect").value);
         periodic_receive();
     });
 

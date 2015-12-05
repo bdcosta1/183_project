@@ -2,6 +2,7 @@
 # this file is released under public domain and you can use without limitations
 
 from gluon import utils as gluon_utils
+from gluon.dal import Rows, Row
 import json
 import time
 
@@ -35,20 +36,24 @@ def load_cats():
     """Loads all messages for the user."""
     rows = db(db.cat).select()
 
-    Place = request.vars.Place
-    Breed = request.vars.Breed
-    #Age = request.vars.Age
-    #Rating = request.vars.Rating
-    #Price = request.vars.Price
-    if Place == "All States":
-        Place = ''
-    else:
-        Place = Place + ' and '
+    place = str(request.vars.Place)
+    breed = str(request.vars.Breed)
+    Age = str(request.vars.Age)
+    #str Rating = request.vars.Rating
+    #str Price = request.vars.Price
 
-    #if Age == "All Ages":
-    #     Age = ''
-    #else:
-    #     Age = Age + ' and '
+    sqlArray = []
+    if place == "All States":
+        place = ""
+    else:
+        place = "Place="+"'"+place+"'"
+        sqlArray.append(place)
+
+    if Age == "All Ages":
+        Age = ""
+    else:
+        Age = "Age="+"'"+Age+"'"
+        sqlArray.append(Age)
 
     # if Rating = "All Ratings":
     #     Rating = ''
@@ -60,18 +65,43 @@ def load_cats():
     # else:
     #     Price = Price + ' and '
 
-    if Breed == "All Breeds":
-        Breed = ''
+    if breed == "All Breeds":
+        breed = ""
+    else:
+        breed = "Breed="+"'"+breed+"'"
+        sqlArray.append(breed)
 
-    sql = Place + Breed
-    if sql == "":
-        sql = "*"
-    rows = db.executesql('SELECT "sql" FROM cat;')
+    s = ""
+    for val in sqlArray:
+        if sqlArray.index(val) != len(sqlArray)-1:
+            s = s + val + " and "
+        else:
+            s = s + val
 
-    print sql
+    # print str
+    #
+    # sql = place + Age + breed
 
-    d = {r.id: {'Name': r.Name, 'Human': r.human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Price':r.Price, 'Bio': r.Bio, 'Rating':r.Rating, 'Image': r.Image}
-         for r in rows}
+    print "SELECT * FROM cat WHERE " + s +";"
+    if s == "":
+        rows = db(db.cat).select()
+        print rows
+        d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age}
+            for r in rows}
+    else:
+        rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
+        for r in rows:
+            print r['id']
+            print
+            print r['Name']
+        d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age']}
+             for r in rows}
+    for r in rows:
+        print r['id']
+
+
+
+
     return response.json(dict(cat_dict=d))
     
 def add_cat():

@@ -22,7 +22,7 @@ cat_breeds = ['Abyssinian', 'American Bobtail','American Curl','American Shortha
 'Oriental Shorthair','Persian','Peterbald','Pixie-Bob','Ragamuffin','Ragdoll', 'Russian Blue','Savannah','Scottish Fold','Selkirk Rex','Siamese',
 'Siberian','Singapura', 'Snowshoe','Somali','Sphynx','Tonkinese','Toyger', 'Turkish Angora','Turkish Van']
 states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY','LA', 'ME', 'ME','MD','MA','MI','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
-ages = ['<1','1','2','3','4','5','6','7+']
+ages = ['less than 1','1','2','3','4','5','6','greater than 7']
 
 
 db.define_table('cat',
