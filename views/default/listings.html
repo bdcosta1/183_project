@@ -50,22 +50,46 @@
     {% #if loggedIn === "True" %}
         <input class="btn btn-primary" type="submit" value="Create New Post"/>
     {% /if %}
-    <div>
+    <div class="myListings">
+        <table style="width:100%" frame = "box">
+        <tr>
+            <th>Title</th>
+            <th>Breed</th>
+            <th>Place</th>
+            <th>Age</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
         {% #cat_dict:cat_id %}
-            <div class="catList">
+            <tr>
                 {% #if editable %}
-                    <p><b>Cat Title</b><button data-iden="{% key %}"><i class="fa fa-pencil"></i></button></p>
-                    <div data-iden="{% key %}"><p class = "displayCat">{% Name %}</p></div>
-
+                    <td bgcolor="white">
+                        <p>{% Name %} <button data-iden="{% key %}"><i class="fa fa-pencil"></i></button></p>
+                    </td>
                 {% /if %}
                 {% #if editable === false %}
-                    <p><b>Cat Title</b></p>
-                    <div><p class = "displayCat">{% name %}</p></div>
+                     <td bgcolor="white">
+                        <p>{% name %}</p>
+                     </td>
                 {% /if %}
-                    <p>{% Breed %} {% Place %} {% Age %} {% Price %}</p>
+                <td bgcolor="white">
+                    <p>{% Breed %}</p>
+                </td>
+                <td bgcolor="white">
+                    <p>{% Place %}</p>
+                </td>
+                <td bgcolor="white">
+                    <p>{% Age %}</p>
+                </td>
+                <td bgcolor="white">
+                    <p>{% Price %}</p>
+                </td>
+                <td bgcolor="white">
                     <a href="{% "posts" %}">View More details</a>
-            </div>
+                </td>
+            </tr>
         {% /cat_dict %}
+        </table>
     </div>
 
 </script>

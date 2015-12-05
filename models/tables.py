@@ -36,12 +36,3 @@ db.define_table('cat',
                 Field('Image', 'upload'),
                 Field('Human', db.auth_user, default=auth.user_id, readable =False, writable=False)
                 )
-db.define_table('cats',
-                Field('name', 'text'),
-                Field('fromDB', 'text', default=True),
-                Field('cat_creator', 'text'),
-                Field('breed', 'text'),
-                Field('stateLoc', 'text'),
-                Field('draft_id', 'text')
-            )
-

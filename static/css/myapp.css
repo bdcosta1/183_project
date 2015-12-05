@@ -93,3 +93,9 @@ button.redButton {
 .orange {
   color: orange;
 }
+
+/* line 78, ../sass/_main.scss */
+div tr {
+  border: solid;
+  border-right: solid;
+}
