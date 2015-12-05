@@ -96,7 +96,8 @@ def load_cats():
             for r in rows}
     else:
         rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
-        d = {r['id']: {'Name': r['Name'], 'Human': r['human'], 'Breed': r['Breed'], 'Place': r['place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'image': r['image']}
+        print rows
+        d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image']}
              for r in rows}
 
 
