@@ -5,7 +5,7 @@
 }
 
 /* line 6, ../sass/_main.scss */
-div p {
+p.indexP {
   color: white;
   font-size: 35px;
   font-weight: bold;

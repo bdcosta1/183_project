@@ -82,7 +82,7 @@ def load_cats():
     #
     # sql = place + Age + breed
 
-    print "SELECT * FROM cat WHERE " + s +";"
+    print s;
     if s == "":
         rows = db(db.cat).select()
         print rows
