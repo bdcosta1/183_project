@@ -38,9 +38,9 @@ def load_cats():
 
     place = str(request.vars.Place)
     breed = str(request.vars.Breed)
-    Age = str(request.vars.Age)
-    #str Rating = request.vars.Rating
-    Price = str(request.vars.Price)
+    age = str(request.vars.Age)
+    #str rating = request.vars.Rating
+    price = str(request.vars.Price)
 
     sqlArray = []
     if place == "All States":
@@ -49,27 +49,34 @@ def load_cats():
         place = "Place="+"'"+place+"'"
         sqlArray.append(place)
 
-    if Age == "All Ages":
-        Age = ""
+    if age == "All Ages":
+        age = ""
     else:
-        Age = "Age="+"'"+Age+"'"
-        sqlArray.append(Age)
+        age = "Age="+"'"+age+"'"
+        sqlArray.append(age)
 
     # if Rating = "All Ratings":
     #     Rating = ''
     # else:
     #     Rating = Rating + ' and '
     #
-    #if Price = "All Prices":
-    #     Price = ''
-    #else:
-    #     Price = Price + ' and '
-
     if breed == "All Breeds":
         breed = ""
     else:
         breed = "Breed="+"'"+breed+"'"
         sqlArray.append(breed)
+
+    if price == "All Prices":
+         price = ''
+    elif price != ">100":
+        range = price.split("-")
+        lower = range[0]
+        higher = range[1]
+        price = "Price BETWEEN "+lower+" AND "+ higher
+        sqlArray.append(price)
+    else:
+        price = "Price>100"
+        sqlArray.append(price)
 
     s = ""
     for val in sqlArray:
@@ -82,21 +89,15 @@ def load_cats():
     #
     # sql = place + Age + breed
 
-    print "SELECT * FROM cat WHERE " + s +";"
+    #print "SELECT * FROM cat WHERE " + s +";"
     if s == "":
         rows = db(db.cat).select()
-        print rows
-        print
-        d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age}
+        d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image}
             for r in rows}
-        print d
     else:
         rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
-        print rows
-        print
-        d = {r['id']: {'Name': r['Name'], 'Human': r['human'], 'Breed': r['Breed'], 'Place': r['place'], 'Age': r['Age']}
+        d = {r['id']: {'Name': r['Name'], 'Human': r['human'], 'Breed': r['Breed'], 'Place': r['place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'image': r['image']}
              for r in rows}
-        print d
 
 
 

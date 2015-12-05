@@ -4,7 +4,7 @@
 
 <script id="template" type="text/ractive">
     <div class="sortBox">
-        <p>{% breedSelected %} {% stateSelected %} {% ageSelected %}</p>
+        <p>{% breedSelected %} {% stateSelected %} {% ageSelected %} {% priceSelected %}</p>
         <select id = "breedSelect">
             <option value = "All Breeds">All Breeds</option>
             <option value = "Abyssinian">Abyssinian</option><option value = "American Bobtail">American Bobtail</option><option value = "American Curl">American Curl </option><option value = "American Shorthair">American Shorthair</option><option value = "American Wirehair">American Wirehair</option>
@@ -39,6 +39,11 @@
             <option value = "less than 1">less than 1</option><option value = "1">1</option><option value = "2">2</option><option value = "3">3</option><option value = "4">4</option>
             <option value = "5">5</option><option value = "6">6</option><option value = "greater than 7">greater than 7</option>
         </select>
+        <span>
+        <select id = "priceSelect">
+            <option value = "All Prices">All Prices</option>
+            <option value = "0-25">0-25</option><option value = "25-50">25-50</option><option value = "50-75">50-75</option><option value = "75-100">75-100</option><option value = ">100">greater than 100</option>
+        </select>
         <input class="btn btn-primary" type="submit" value="Search" on-click="filterResults"/>
 
     </div>
@@ -57,7 +62,7 @@
                     <p><b>Cat Title</b></p>
                     <div><p class = "displayCat">{% name %}</p></div>
                 {% /if %}
-                    <p>{% Breed %} {% Place %} {% Age %}</p>
+                    <p>{% Breed %} {% Place %} {% Age %} {% Price %}</p>
                     <a href="{% "posts" %}">View More details</a>
             </div>
         {% /cat_dict %}
@@ -82,7 +87,8 @@ $(function() {
             editingKey: -1,
             stateSelected: "All States",
             breedSelected: "All Breeds",
-            ageSelected: "ALL Ages",
+            ageSelected: "All Ages",
+            priceSelected: "All Prices",
         },
     });
 
@@ -92,7 +98,8 @@ $(function() {
                     data:{
                         Breed: MAIN.get("breedSelected"),
                         Place: MAIN.get("stateSelected"),
-                        Age: MAIN.get("ageSelected")
+                        Age: MAIN.get("ageSelected"),
+                        Price: MAIN.get("priceSelected")
                     },
                     method: 'POST',
                     success: function (data) {
@@ -126,6 +133,7 @@ $(function() {
         MAIN.set("breedSelected",document.getElementById("breedSelect").value);
         MAIN.set("stateSelected",document.getElementById("stateSelect").value);
         MAIN.set("ageSelected",document.getElementById("ageSelect").value);
+        MAIN.set("priceSelected",document.getElementById("priceSelect").value);
         periodic_receive();
     });
 
