@@ -40,7 +40,7 @@ def load_cats():
     breed = str(request.vars.Breed)
     Age = str(request.vars.Age)
     #str Rating = request.vars.Rating
-    #str Price = request.vars.Price
+    Price = str(request.vars.Price)
 
     sqlArray = []
     if place == "All States":
@@ -60,9 +60,9 @@ def load_cats():
     # else:
     #     Rating = Rating + ' and '
     #
-    # if Price = "All Prices":
+    #if Price = "All Prices":
     #     Price = ''
-    # else:
+    #else:
     #     Price = Price + ' and '
 
     if breed == "All Breeds":
