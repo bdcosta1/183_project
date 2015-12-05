@@ -4,7 +4,7 @@
 
 {{for img_info in image_list:}}
     <div id="logo" align="middle">
-        <p>
+        <p class="indexP">
             Rent A Cat
         </p>
             <img src="{{=img_info['url']}}" style="height: 200px"/>
@@ -17,7 +17,7 @@
 
             <div class="col-md-4">
                 <div class="thumbnail" align="middle">
-                    <p>{{=A('Add Your Own Cat', _href=URL('default', 'add_cat'))}}</p>
+                    <p class="indexP">{{=A('Add Your Own Cat', _href=URL('default', 'add_cat'))}}</p>
                     <img src="https://bytebucket.org/snippets/asilva3/4Laod/raw/61e9a87e6d04c92a3cfee1d29e600b5a74fdaf95/heart-icon.jpg">
                 </div>
             </div>
@@ -25,7 +25,7 @@
             <div class="col-md-4" align="middle">
                 <div class="thumbnail">
                     <div class = "Leader">
-                        <p>{{=A('View Cats', _class='white', _href=URL('default', 'listings'))}}</p>
+                        <p class="indexP">{{=A('View Cats', _class='white', _href=URL('default', 'listings'))}}</p>
                         <img src="https://bytebucket.org/snippets/asilva3/yqaoG/raw/febcf5311336719b7648dfc779fbb2eeb3a5a5e1/yeye.jpg" height="100" width="300" class="img-rounded">
                     </div>
                 </div>
@@ -34,10 +34,10 @@
             <div class="col-md-4">
                 <div class="thumbnail" align="middle">
                     {{if auth.user_id is not None:}}
-                        <p> {{=A('Logout',  _href=URL('default', 'user', args=['logout']))}}</p>
+                        <p class="indexP"> {{=A('Logout',  _href=URL('default', 'user', args=['logout']))}}</p>
                         <img src="http://cdn.osxdaily.com/wp-content/uploads/2013/07/contacts-icon.jpg" width="100" height="10">
                     {{else:}}
-                        <p> {{=A('Log In',  _href=URL('default', 'user', args=['login']))}} Or
+                        <p class="indexP"> {{=A('Log In',  _href=URL('default', 'user', args=['login']))}} Or
                             {{=A('Sign In',  _href=URL('default', 'user', args=['register']))}}
                         </p>
                         <img src="http://cdn.osxdaily.com/wp-content/uploads/2013/07/contacts-icon.jpg" width="100" height="10">
