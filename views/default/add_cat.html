@@ -1,5 +1,28 @@
 {{extend 'layout.html'}}
+<!--This is the cat form user will be signing up for-->
+<div id="entryform" style="display: none">
+    {{=form}}
+</div>
 
-	{{=form}}
-	
+<!--button to start the form-->
+<div id="start">
+        <h2>
+        <img src="https://bytebucket.org/snippets/asilva3/7EpM8/raw/f8f6b616cb8db8801a713e05345bbdfe902f2d23/wah.gif" height="100" width="100" alt="Hello" class="img-rounded">
+        Let's <a class="btn btn-danger" id="btn_add">Start</a> by adding your paw-some cat!
+        </h2>
+</div>
 
+<script>
+  //function when start button is clicked
+  $("#btn_add").click(function(e) {
+    //slide div "start" to right of the page
+      $("#start").animate({
+          'margin-left':'650px'},1000,
+              function(){
+                  $(this).slideUp('fast');
+              }
+      );
+      //slide down the form
+      $("#entryform").delay(800).slideDown(1000);
+  });
+</script>
