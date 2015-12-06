@@ -42,6 +42,18 @@ def update_cat():
     row.update_record(Name = request.vars.Name)
     return "ok"
 
+def user_profile():
+    id = auth.user_id
+    info = db(db.auth_user.id==id).select()
+
+    s = "id='"+str(id)+"'"
+    rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
+    d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image']}
+             for r in rows}
+
+    return dict(info=info,cats=d)
+
+
 def load_cats():
     """Loads all messages for the user."""
     rows = db(db.cat).select()
