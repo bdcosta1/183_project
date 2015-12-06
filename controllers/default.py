@@ -20,6 +20,16 @@ def index():
         ))
     return dict(image_list=image_list)
 
+def add_cat():
+    form = SQLFORM(db.cat)
+    if form.process().accepted:
+        session.flash = T('Your cat was add!')
+        redirect(URL('default', 'listings'))
+    elif form.errors:
+        session.flash = T('Meow website is not working, please try again!')
+
+    return dict(form=form)
+
 def listings():
     loggedIn = True
     if auth.user_id is None:
@@ -100,22 +110,7 @@ def load_cats():
         d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image']}
              for r in rows}
 
-
-
-
     return response.json(dict(cat_dict=d))
-    
-def add_cat():
-    form = SQLFORM(db.cat)
-
-    if form.process().accepted:
-        session.flash = T('The data was inserted')
-        redirect(URL('default', 'index'))
-    elif form.errors:
-        session.flash = T('The data was not inserted')
-
-    return dict(form=form)
-
 
 def user():
     """
@@ -133,6 +128,8 @@ def user():
         @auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
+    auth.settings.registration_requires_verification = True
+    auth.settings.login_after_registration = True
     return dict(form=auth())
 
 
