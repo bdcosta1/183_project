@@ -43,15 +43,20 @@ def update_cat():
     return "ok"
 
 def user_profile():
+    loggedIn = True
     id = auth.user_id
     info = db(db.auth_user.id==id).select()
 
-    s = "id='"+str(id)+"'"
+    s = "id='"+str(id)+"' "
+    print id
     rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
+    print rows
     d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image']}
              for r in rows}
+    print d
 
-    return dict(info=info,cats=d)
+
+    return dict(cat_dict=d, loggedIn=loggedIn)
 
 
 def load_cats():

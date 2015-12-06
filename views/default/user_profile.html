@@ -1,3 +1,106 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
+<div id="target"></div>
 
-{{=cats}}
+<script id="template" type="text/ractive">
+
+
+    <div class="myListings">
+        <table style="width:100%" frame = "box">
+        <tr>
+            <th>Title</th>
+            <th>Breed</th>
+            <th>Place</th>
+            <th>Age</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+        {% #cat_dict:cat_id %}
+            <tr>
+                {% #if editable %}
+                    <td bgcolor="white">
+                        <p>{% Name %} <button data-iden="{% key %}"><i class="fa fa-pencil"></i></button></p>
+                    </td>
+                {% /if %}
+                {% #if editable === false %}
+                     <td bgcolor="white">
+                        <p>{% Name %}</p>
+                     </td>
+                {% /if %}
+                <td bgcolor="white">
+                    <p>{% Breed %}</p>
+                </td>
+                <td bgcolor="white">
+                    <p>{% Place %}</p>
+                </td>
+                <td bgcolor="white">
+                    <p>{% Age %}</p>
+                </td>
+                <td bgcolor="white">
+                    <p>{% Price %}</p>
+                </td>
+                <td bgcolor="white">
+                    <a href="{% "posts" %}">View More details</a>
+                </td>
+            </tr>
+        {% /cat_dict %}
+        </table>
+    </div>
+</script>
+
+
+<script>
+$(function() {
+    // Ractive object
+    var MAIN = new Ractive({
+        el: '#target',
+        template: '#template',
+        delimiters: ['{%', '%}'],
+        tripleDelimiters: ['{%%', '%%}'],
+        data: {
+            cat_dict: {},
+            mytext: 'Enter Cat Name',
+            loggedIn: "{{=loggedIn}}",
+            user_id: "{{=auth.user_id}}",
+            oldCatName: "",
+            editingKey: -1
+
+        },
+    });
+
+    function periodic_receive() {
+        $.ajax("{{=URL('default', 'load_cats', user_signature=True)}}",
+                {
+                    data:{
+                        id: auth.user_id
+                    },
+                    method: 'POST',
+                    success: function (data) {
+                        var oldRow = -1;
+                        if (MAIN.get("editingKey") != -1) {
+                            oldRow = MAIN.get("cat_dict")[MAIN.get("editingKey")];
+                        }
+                        var cat_dict = data['cat_dict'];
+                        m = Object.keys(cat_dict).length;
+                        var i;
+                        for (var key in cat_dict) {
+                            if (cat_dict[key]["Human"] == MAIN.get('user_id')) {
+                                cat_dict[key]["editable"] = true;
+                            }
+                            else {
+                                cat_dict[key]["editable"] = false;
+                            }
+                            cat_dict[key]["ident"] = cat_dict[key]["draft_id"];
+                            cat_dict[key]["key"] = key;
+
+                        }
+
+                        MAIN.set('cat_dict', cat_dict);
+                    }
+                }
+        );
+    }
+
+});
+
+</script>
