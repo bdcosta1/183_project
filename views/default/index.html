@@ -17,7 +17,11 @@
 
             <div class="col-md-4">
                 <div class="thumbnail" align="middle">
-                    <p class="indexP">{{=A('Add Your Own Cat', _href=URL('default', 'add_cat'))}}</p>
+                    {{if auth.user_id is not None:}}
+                        <p class="indexP">{{=A('Add Your Own Cat', _href=URL('default', 'add_cat'))}}</p>
+                    {{else:}}
+                        <p class="indexP">{{=A('Add Your Own Cat', _href=URL('default', 'user', args=['login']))}}</p>
+                    {{pass}}
                     <img src="https://bytebucket.org/snippets/asilva3/4Laod/raw/61e9a87e6d04c92a3cfee1d29e600b5a74fdaf95/heart-icon.jpg">
                 </div>
             </div>
