@@ -44,20 +44,81 @@ def update_cat():
 
 def user_profile():
     loggedIn = True
+    if auth.user_id is None:
+        loggedIn = False
+    return dict(loggedIn=loggedIn, user_id=auth.user_id)
+
+def user_cats():
     id = auth.user_id
     info = db(db.auth_user.id==id).select()
+    sqlArray = []
 
     s = "id='"+str(id)+"' "
-    print id
-    rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
-    print rows
-    d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image']}
+    sqlArray.append(s)
+
+    place = str(request.vars.Place)
+    breed = str(request.vars.Breed)
+    age = str(request.vars.Age)
+    #str rating = request.vars.Rating
+    price = str(request.vars.Price)
+
+    if place == "All States":
+        place = ""
+    else:
+        place = "Place="+"'"+place+"'"
+        sqlArray.append(place)
+
+    if age == "All Ages":
+        age = ""
+    else:
+        age = "Age="+"'"+age+"'"
+        sqlArray.append(age)
+
+    # if Rating = "All Ratings":
+    #     Rating = ''
+    # else:
+    #     Rating = Rating + ' and '
+    #
+    if breed == "All Breeds":
+        breed = ""
+    else:
+        breed = "Breed="+"'"+breed+"'"
+        sqlArray.append(breed)
+
+    if price == "All Prices":
+         price = ''
+    elif price != ">100":
+        range = price.split("-")
+        lower = range[0]
+        higher = range[1]
+        price = "Price BETWEEN "+lower+" AND "+ higher
+        sqlArray.append(price)
+    else:
+        price = "Price>100"
+        sqlArray.append(price)
+
+    s = ""
+    for val in sqlArray:
+        if sqlArray.index(val) != len(sqlArray)-1:
+            s = s + val + " and "
+        else:
+            s = s + val
+
+    # print str
+    #
+    # sql = place + Age + breed
+
+    #print "SELECT * FROM cat WHERE " + s +";"
+    if s == "":
+        rows = db(db.cat).select()
+        d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image}
+            for r in rows}
+    else:
+        rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
+        print rows
+        d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image']}
              for r in rows}
-    print d
-
-
-    return dict(cat_dict=d, loggedIn=loggedIn)
-
+    return dict(cat_dict=d)
 
 def load_cats():
     """Loads all messages for the user."""
