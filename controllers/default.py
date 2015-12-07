@@ -63,8 +63,8 @@ def user_cats():
     info = db(db.auth_user.id==id).select()
     sqlArray = []
 
-    s = "id='"+str(id)+"' "
-    sqlArray.append(s)
+    search = "id='"+str(id)+"' "
+    sqlArray.append(search)
 
     place = str(request.vars.Place)
     breed = str(request.vars.Breed)
@@ -119,15 +119,17 @@ def user_cats():
     # sql = place + Age + breed
 
     #print "SELECT * FROM cat WHERE " + s +";"
+
     if s == "":
         rows = db(db.cat).select(orderby=db.cat.Name)
         d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image, 'Created_On': r.Created_On}
             for r in rows}
     else:
         rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
-        print rows
         d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image'], 'Created_On': r['Created_On']}
              for r in rows}
+
+        print d
     return dict(cat_dict=d)
 
 def load_cats():
