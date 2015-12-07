@@ -30,6 +30,16 @@ def add_cat():
 
     return dict(form=form)
 
+def cat_details():
+    row = db(db.cat.id == request.args(0)).select()
+    return dict(details=row)
+
+def rent_cat():
+    print request.args(0)
+    db(db.cat.id == request.args(0)).update(Rented=True)
+    redirect(URL('default', 'listings'))
+    return ""
+
 def listings():
     loggedIn = True
     if auth.user_id is None:

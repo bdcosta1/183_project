@@ -1,0 +1,20 @@
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+
+<body>
+TESTTTTTTTTT 
+{{=request.args(0)}}
+
+{{=details}}
+<br>
+{{ for cat in details: }}
+	{{ if cat.Rented == False: }}
+		{{=A('Rent me meow', _class='btn btn-primary', _href=URL('default', 'rent_cat', args=[request.args(0)]))}}
+	{{pass}}
+{{pass}}
+
+<br><br>
+
+</body>

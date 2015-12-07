@@ -36,5 +36,7 @@ db.define_table('cat',
                 Field('Rating', readable =False, writable=False),
                 Field('Image', 'upload'),
                 Field('Human', db.auth_user, default=auth.user_id, readable =False, writable=False),
-                Field('Created_On', default=datetime.now().strftime("%m/%d"), readable=False, writable=False)
+                Field('Created_On', default=datetime.now().strftime("%m/%d"), readable=False, writable=False),
+                Field('Rented', 'boolean', default=False, readable =False, writable=False),
+                Field('Rented_On', readable=False, writable=False),
                 )
