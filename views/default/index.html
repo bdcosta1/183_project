@@ -1,7 +1,17 @@
 {{extend 'layout.html'}}
 
-<!--Show the logo for our team-->
+<!--audio for our website-->
+ <audio autoplay>
+    <source src="https://dl.dropboxusercontent.com/content_link/KF9b21WBdXV1VygvZkYnY4Ybie1Ccbx24qZj3voalQSCw4HpkL7AFeMMsX5nG9Lq/file"
+         type='audio/mp3'>
+    <!-- The next two lines are only executed if the browser doesn't support MP4 files -->
+    <source src="http://media.w3.org/2010/07/bunny/04-Death_Becomes_Fur.oga"
+         type='audio/ogg; codecs=vorbis'>
+    <!-- The next line will only be executed if the browser doesn't support the <audio> tag-->
+    <p>Your browser does not support the HTML5 Audio element.</p>
+</audio>
 
+<!--Show the logo for our team-->
 {{for img_info in image_list:}}
     <div id="logo" align="middle">
         <p class="indexP">
