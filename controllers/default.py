@@ -180,12 +180,12 @@ def load_cats():
     #print "SELECT * FROM cat WHERE " + s +";"
     if s == "":
         rows = db(db.cat).select()
-        d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image}
+        d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image, 'Created_On': r.Created_On}
             for r in rows}
     else:
         rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
         print rows
-        d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image']}
+        d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image'], 'Created_On': r['Created_On']}
              for r in rows}
 
     return response.json(dict(cat_dict=d))
