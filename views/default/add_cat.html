@@ -1,15 +1,19 @@
 {{extend 'layout.html'}}
 <!--This is the cat form user will be signing up for-->
 <div id="entryform" style="display: none">
+    <!--Home button-->
+    <a class="btn btn-success" id="home">Back to home page!</a>
+    <!--Python form to fill out the cat-->
+    <h2 align="middle">Meow let's add your cat!</h2>
     {{=form}}
 </div>
 
 <!--button to start the form-->
 <div id="start">
-        <h2>
+    <h2>
         <img src="https://bytebucket.org/snippets/asilva3/7EpM8/raw/f8f6b616cb8db8801a713e05345bbdfe902f2d23/wah.gif" height="100" width="100" class="img-rounded">
         Let's <a class="btn btn-success" id="btn_add">Start</a> by adding your paw-some cat!
-        </h2>
+    </h2>
 </div>
 
 <script>
@@ -24,5 +28,10 @@
       );
       //slide down the form
       $("#entryform").delay(800).slideDown(1000);
+  });
+
+  //function when home button is clicked re-direct to home page
+  $("#home").click(function(e){
+      window.location = "index";
   });
 </script>
