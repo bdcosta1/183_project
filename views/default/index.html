@@ -1,15 +1,20 @@
 {{extend 'layout.html'}}
+<!--our music-->
 
-<!--audio for our website-->
- <audio autoplay>
-    <source src="https://dl.dropboxusercontent.com/content_link/KF9b21WBdXV1VygvZkYnY4Ybie1Ccbx24qZj3voalQSCw4HpkL7AFeMMsX5nG9Lq/file"
+
+ <!--audio for our website-->
+ <audio id="myAudio" autoplay>
+    <source src="/Project/static/mp3/music.mp3"
          type='audio/mp3'>
-    <!-- The next two lines are only executed if the browser doesn't support MP4 files -->
-    <source src="http://media.w3.org/2010/07/bunny/04-Death_Becomes_Fur.oga"
-         type='audio/ogg; codecs=vorbis'>
     <!-- The next line will only be executed if the browser doesn't support the <audio> tag-->
     <p>Your browser does not support the HTML5 Audio element.</p>
 </audio>
+
+<div class="music" align="right">
+    <button type="button" onclick="mute()">
+         {{=icon_music}} Mute
+    </button>
+</div>
 
 <!--Show the logo for our team-->
 {{for img_info in image_list:}}
@@ -62,3 +67,14 @@
 
         </div>
     </div>
+
+<script>
+function mute(){
+  var myAudio = document.getElementById("myAudio");
+  if (myAudio.paused) {
+    myAudio.play();
+  } else {
+    myAudio.pause();
+  }
+}
+</script>
