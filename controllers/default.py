@@ -6,19 +6,8 @@ from gluon.dal import Rows, Row
 import json
 import time
 
-#cat logo
-IMAGE_URLS = [
-    'https://bytebucket.org/snippets/asilva3/dRaMR/raw/5bfc5bd1022ac994124c34a96dab8b64c3c21d3f/cat.jpg?token=242a74d3b8bfad90400f1a8a5eac9ff7a0924d3a',
-]
-
 def index():
-    image_list = []
-    for i, img_url in enumerate(IMAGE_URLS):
-        image_list.append(dict(
-            url=img_url,
-            id=i,
-        ))
-    return dict(image_list=image_list)
+    return dict()
 
 def add_cat():
     form = SQLFORM(db.cat)
