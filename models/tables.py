@@ -16,6 +16,7 @@
 #########################################################################
 from datetime import datetime
 
+
 cat_breeds = ['Abyssinian', 'American Bobtail','American Curl','American Shorthair','American Wirehair','Balinese','Bengal','Birman','Bombay',
 'British Shorthair', 'Burmese','Charteux','Chausie','Colorpoint','Cornish Rex','Cymric','Devon Rex','Egyptian Mau','Exotic Shorthair',
 'Havana Brown','Himalayan', 'Japanese Bobtail','Javanese','Korat','LaPerm','Maine Coon','Manx','Munchkin','Nebelung','Norwegian Forrest','Ocicat',
@@ -34,5 +35,6 @@ db.define_table('cat',
                 Field('Price', 'integer'),
                 Field('Rating', readable =False, writable=False),
                 Field('Image', 'upload'),
-                Field('Human', db.auth_user, default=auth.user_id, readable =False, writable=False)
+                Field('Human', db.auth_user, default=auth.user_id, readable =False, writable=False),
+                Field('Created_On', default=datetime.now().strftime("%m/%d"), readable=False, writable=False)
                 )

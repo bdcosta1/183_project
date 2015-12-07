@@ -99,3 +99,13 @@ div tr {
   border: solid;
   border-right: solid;
 }
+
+/* line 82, ../sass/_main.scss */
+button.myButton {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
