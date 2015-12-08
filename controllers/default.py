@@ -119,7 +119,7 @@ def user_cats():
              for r in rows}
 
         print d
-    return dict(cat_dict=d)
+    return response.json(dict(cat_dict=d))
 
 def load_cats():
     """Loads all messages for the user."""
