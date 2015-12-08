@@ -1,15 +1,14 @@
 {{extend 'layout.html'}}
-<!--our music-->
-
 
  <!--audio for our website-->
- <audio id="myAudio" autoplay>
+ <audio id="myAudio" autoplay loop>
     <source src="/Project/static/mp3/music.mp3"
          type='audio/mp3'>
     <!-- The next line will only be executed if the browser doesn't support the <audio> tag-->
     <p>Your browser does not support the HTML5 Audio element.</p>
 </audio>
 
+<!--mute button-->
 <div class="music" align="right">
     <button type="button" onclick="mute()">
          {{=icon_music}} Mute
@@ -17,16 +16,14 @@
 </div>
 
 <!--Show the logo for our team-->
-{{for img_info in image_list:}}
-    <div id="logo" align="middle">
-        <p class="indexP">
-            Rent A Cat
-        </p>
-            <img src="{{=img_info['url']}}" style="height: 200px"/>
-    </div>
-{{pass}}
+<div id="logo" align="middle">
+    <p class="indexP">
+        Rent A Cat
+    </p>
+    <img src="https://bytebucket.org/snippets/asilva3/dRaMR/raw/5bfc5bd1022ac994124c34a96dab8b64c3c21d3f/cat.jpg?token=242a74d3b8bfad90400f1a8a5eac9ff7a0924d3a" height="200" width="300" class="img-rounded">
+</div>
 
-<!--3 different features: Adding Your Own Cat, Viewing Board, Signing In/Out-->
+<<!--3 different features: Adding Your Own Cat, Viewing Board, Signing In/Out-->
     <div class = "Ratings">
         <div class= "row">
 

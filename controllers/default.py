@@ -6,19 +6,8 @@ from gluon.dal import Rows, Row
 import json
 import time
 
-#cat logo
-IMAGE_URLS = [
-    'https://bytebucket.org/snippets/asilva3/dRaMR/raw/5bfc5bd1022ac994124c34a96dab8b64c3c21d3f/cat.jpg?token=242a74d3b8bfad90400f1a8a5eac9ff7a0924d3a',
-]
-
 def index():
-    image_list = []
-    for i, img_url in enumerate(IMAGE_URLS):
-        image_list.append(dict(
-            url=img_url,
-            id=i,
-        ))
-    return dict(image_list=image_list)
+    return dict()
 
 def add_cat():
     form = SQLFORM(db.cat)
@@ -63,8 +52,8 @@ def user_cats():
     info = db(db.auth_user.id==id).select()
     sqlArray = []
 
-    s = "id='"+str(id)+"' "
-    sqlArray.append(s)
+    search = "id='"+str(id)+"' "
+    sqlArray.append(search)
 
     place = str(request.vars.Place)
     breed = str(request.vars.Breed)
@@ -119,15 +108,17 @@ def user_cats():
     # sql = place + Age + breed
 
     #print "SELECT * FROM cat WHERE " + s +";"
+
     if s == "":
         rows = db(db.cat).select(orderby=db.cat.Name)
         d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image, 'Created_On': r.Created_On}
             for r in rows}
     else:
         rows = db.executesql("SELECT * FROM cat WHERE " + s +";", as_dict=True)
-        print rows
         d = {r['id']: {'Name': r['Name'], 'Human': r['Human'], 'Breed': r['Breed'], 'Place': r['Place'], 'Age': r['Age'], 'Bio': r['Bio'], 'Price': r['Price'], 'Image': r['Image'], 'Created_On': r['Created_On']}
              for r in rows}
+
+        print d
     return dict(cat_dict=d)
 
 def load_cats():

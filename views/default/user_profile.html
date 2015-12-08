@@ -50,18 +50,83 @@
     {% #if loggedIn === "True" %}
         <input class="btn btn-primary" type="submit" value="Create New Post"/>
     {% /if %}
+    <p></p>
     <div class="myListings">
         <table style="width:100%" frame = "box">
         <tr>
-            <th>Title</th>
-            <th>Breed</th>
-            <th>Place</th>
-            <th>Age</th>
-            <th>Price</th>
+            {% #if sortFrom == true %}
+                {% #if fromDesc == true %}
+                    <th>From <button class = "myButton" data-iden="fromAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                {% /if %}
+                {% #if fromDesc == false %}
+                    <th>From <button class = "myButton" data-iden="fromDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                {% /if %}
+            {% /if %}
+            {% #if sortFrom == false %}
+                <th>From <button class = "myButton" data-iden="fromDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+            {% /if %}
+            {% #if sortName == true %}
+                {% #if nameDesc == true %}
+                    <th>Name <button class = "myButton" data-iden="nameAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                {% /if %}
+                {% #if nameDesc == false %}
+                    <th>Name <button class = "myButton" data-iden="nameDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                {% /if %}
+            {% /if %}
+            {% #if sortName == false %}
+                <th>Name <button class = "myButton" data-iden="nameDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+            {% /if %}
+            {% #if sortBreed == true %}
+                {% #if breedDesc == true %}
+                    <th>Breed <button class = "myButton" data-iden="breedAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                {% /if %}
+                {% #if breedDesc == false %}
+                    <th>Breed <button class = "myButton" data-iden="breedDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                {% /if %}
+            {% /if %}
+            {% #if sortBreed == false %}
+                <th>Breed <button class = "myButton" data-iden="breedDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+            {% /if %}
+            {% #if sortPlace == true %}
+                {% #if placeDesc == true %}
+                    <th>Place <button class = "myButton" data-iden="placeAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                {% /if %}
+                {% #if placeDesc == false %}
+                    <th>Place <button class = "myButton" data-iden="placeDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                {% /if %}
+            {% /if %}
+            {% #if sortPlace == false %}
+                <th>Place <button class = "myButton" data-iden="placeDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+            {% /if %}
+            {% #if sortAge == true %}
+                {% #if ageDesc == true %}
+                    <th>Age <button class = "myButton" data-iden="ageAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                {% /if %}
+                {% #if ageDesc == false %}
+                    <th>Age <button class = "myButton" data-iden="ageDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                {% /if %}
+            {% /if %}
+            {% #if sortAge == false %}
+                <th>Age <button class = "myButton" data-iden="ageDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+            {% /if %}
+            {% #if sortPrice == true %}
+                {% #if priceDesc == true %}
+                    <th>Price <button class = "myButton" data-iden="priceAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                {% /if %}
+                {% #if priceDesc == false %}
+                    <th>Price <button class = "myButton" data-iden="priceDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                {% /if %}
+            {% /if %}
+            {% #if sortPrice == false %}
+                <th>Price <button class = "myButton" data-iden="priceDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+            {% /if %}
             <th></th>
         </tr>
-        {% #cat_dict:cat_id %}
+        {% #cat_List:cat_id %}
             <tr>
+                <td bgcolor="white">
+                    <p>{% Created_On %} <img src="{{=URL('default', 'download')}}/{% Image %}" height="60" width="60"/></p>
+                </td>
                 {% #if editable %}
                     <td bgcolor="white">
                         <p>{% Name %} <button data-iden="{% key %}"><i class="fa fa-pencil"></i></button></p>
@@ -85,7 +150,7 @@
                     <p>{% Price %}</p>
                 </td>
                 <td bgcolor="white">
-                    <a href="{% "posts" %}">View More details</a>
+                    <a href="{% "cat_details" +"/" + loc %}">Cat Details!</a>
                 </td>
             </tr>
         {% /cat_dict %}
@@ -93,7 +158,6 @@
     </div>
 
 </script>
-
 
 <script>
 $(function() {
@@ -104,7 +168,7 @@ $(function() {
         delimiters: ['{%', '%}'],
         tripleDelimiters: ['{%%', '%%}'],
         data: {
-            cat_dict: {},
+            cat_List: [],
             mytext: 'Enter Cat Name',
             loggedIn: "{{=loggedIn}}",
             user_id: "{{=user_id}}",
@@ -114,11 +178,23 @@ $(function() {
             breedSelected: "All Breeds",
             ageSelected: "All Ages",
             priceSelected: "All Prices",
+            sortFrom: true,
+            fromDesc: true,
+            sortName: false,
+            nameDesc: false,
+            sortBreed: false,
+            breedDesc: false,
+            sortPlace: false,
+            placeDesc: false,
+            sortAge: false,
+            ageDesc: false,
+            sortPrice: false,
+            priceDesc: false
         },
     });
 
     function periodic_receive() {
-        $.ajax("{{=URL('default', 'user_profile', user_signature=True)}}",
+        $.ajax("{{=URL('default', 'user_cats', user_signature=True)}}",
                 {
                     data:{
                         Breed: MAIN.get("breedSelected"),
@@ -133,8 +209,7 @@ $(function() {
                             oldRow = MAIN.get("cat_dict")[MAIN.get("editingKey")];
                         }
                         var cat_dict = data['cat_dict'];
-                        m = Object.keys(cat_dict).length;
-                        var i;
+                        cat_List = [];
                         for (var key in cat_dict) {
                             if (cat_dict[key]["Human"] == MAIN.get('user_id')) {
                                 cat_dict[key]["editable"] = true;
@@ -143,11 +218,140 @@ $(function() {
                                 cat_dict[key]["editable"] = false;
                             }
                             cat_dict[key]["ident"] = cat_dict[key]["draft_id"];
-                            cat_dict[key]["key"] = key;
-
+                            cat_dict[key]["loc"] = key;
+                            cat_List.push(cat_dict[key]);
                         }
 
-                        MAIN.set('cat_dict', cat_dict);
+                        if((MAIN.get("sortFrom")==true) && (MAIN.get("fromDesc")== true)) {
+                            cat_List.reverse();
+                        }
+                        else if((MAIN.get("sortFrom")==true) && (MAIN.get("fromDesc")== false)) {
+
+                        }
+                        else if((MAIN.get("sortName")==true) && (MAIN.get("nameDesc")== true)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Name.toLowerCase() > b.Name.toLowerCase()) {
+                                    return -1;
+                                }
+                                if (a.Name.toLowerCase() < b.Name.toLowerCase()) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortName")==true) && (MAIN.get("nameDesc")== false)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Name.toLowerCase() < b.Name.toLowerCase()) {
+                                    return -1;
+                                }
+                                if (a.Name.toLowerCase() > b.Name.toLowerCase()) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortBreed")==true) && (MAIN.get("breedDesc")== true)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Breed > b.Breed) {
+                                    return -1;
+                                }
+                                if (a.Breed < b.Breed) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortBreed")==true) && (MAIN.get("breedDesc")== false)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Breed < b.Breed) {
+                                    return -1;
+                                }
+                                if (a.Breed > b.Breed) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortPlace")==true) && (MAIN.get("placeDesc")== true)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Place > b.Place) {
+                                    return -1;
+                                }
+                                if (a.Place < b.Place) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortPlace")==true) && (MAIN.get("placeDesc")== false)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Place < b.Place) {
+                                    return -1;
+                                }
+                                if (a.Place > b.Place) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortAge")==true) && (MAIN.get("ageDesc")== true)) {
+                            cat_List.sort(function (a, b) {
+                                if(a.Age == "less than 1"){
+                                    return 1;
+                                }
+                                if(b.Age == "less than 1"){
+                                    return -1;
+                                }
+                                if (a.Age > b.Age) {
+                                    return -1;
+                                }
+                                if (a.Age < b.Age) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortAge")==true) && (MAIN.get("ageDesc")== false)) {
+                            cat_List.sort(function (a, b) {
+                                if(a.Age == "less than 1"){
+                                    return -1;
+                                }
+                                if(b.Age == "less than 1"){
+                                    return 1;
+                                }
+                                if (a.Age < b.Age) {
+                                    return -1;
+                                }
+                                if (a.Age > b.Age) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortPrice")==true) && (MAIN.get("priceDesc")== true)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Price > b.Price) {
+                                    return -1;
+                                }
+                                if (a.Price < b.Price) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+                        else if((MAIN.get("sortPrice")==true) && (MAIN.get("priceDesc")== false)) {
+                            cat_List.sort(function (a, b) {
+                                if (a.Price < b.Price) {
+                                    return -1;
+                                }
+                                if (a.Price > b.Price) {
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                        }
+
+                        MAIN.set('cat_List', cat_List);
                     }
                 }
         );
@@ -161,7 +365,94 @@ $(function() {
         MAIN.set("priceSelected",document.getElementById("priceSelect").value);
         periodic_receive();
     });
+    MAIN.on("sortByHandle", function(e) {
+        var sortType = $(e.node).data("iden");
+        if(sortType == "fromAsc"){
+            MAIN.set("fromDesc", false);
+            periodic_receive();
+        }
+        else if(sortType == "fromDesc"){
+            MAIN.set("sortFrom", true);
+            MAIN.set("fromDesc", true);
+            MAIN.set("sortName", false);
+            MAIN.set("sortBreed", false);
+            MAIN.set("sortPlace", false);
+            MAIN.set("sortAge", false);
+            MAIN.set("sortPrice", false);
+            periodic_receive();
+        }
+        else if(sortType == "nameDesc"){
+            MAIN.set("sortName", true);
+            MAIN.set("nameDesc", true);
+            MAIN.set("sortFrom", false);
+            MAIN.set("sortBreed", false);
+            MAIN.set("sortPlace", false);
+            MAIN.set("sortAge", false);
+            MAIN.set("sortPrice", false);
+            periodic_receive();
+        }
+        else if(sortType == "nameAsc"){
+            MAIN.set("nameDesc", false);
+            periodic_receive();
+        }
+        else if(sortType == "breedDesc"){
+            MAIN.set("sortBreed", true);
+            MAIN.set("breedDesc", true);
+            MAIN.set("sortFrom", false);
+            MAIN.set("sortName", false);
+            MAIN.set("sortPlace", false);
+            MAIN.set("sortAge", false);
+            MAIN.set("sortPrice", false);
+            periodic_receive();
+        }
+        else if(sortType == "breedAsc"){
+            MAIN.set("breedDesc", false);
+            periodic_receive();
+        }
+        else if(sortType == "placeDesc"){
+            MAIN.set("sortPlace", true);
+            MAIN.set("placeDesc", true);
+            MAIN.set("sortFrom", false);
+            MAIN.set("sortName", false);
+            MAIN.set("sortBreed", false);
+            MAIN.set("sortAge", false);
+            MAIN.set("sortPrice", false);
+            periodic_receive();
+        }
+        else if(sortType == "placeAsc"){
+            MAIN.set("placeDesc", false);
+            periodic_receive();
+        }
+        else if(sortType == "ageDesc"){
+            MAIN.set("sortAge", true);
+            MAIN.set("ageDesc", true);
+            MAIN.set("sortFrom", false);
+            MAIN.set("sortName", false);
+            MAIN.set("sortBreed", false);
+            MAIN.set("sortPrice", false);
+            MAIN.set("sortPlace", false);
+            periodic_receive();
+        }
+        else if(sortType == "ageAsc"){
+            MAIN.set("ageDesc", false);
+            periodic_receive();
+        }
+        else if(sortType == "priceDesc"){
+            MAIN.set("sortPrice", true);
+            MAIN.set("priceDesc", true);
+            MAIN.set("sortFrom", false);
+            MAIN.set("sortName", false);
+            MAIN.set("sortBreed", false);
+            MAIN.set("sortAge", false);
+            MAIN.set("sortPlace", false);
+            periodic_receive();
+        }
+        else if(sortType == "priceAsc"){
+            MAIN.set("priceDesc", false);
+            periodic_receive();
+        }
 
+    });
 });
 
 </script>

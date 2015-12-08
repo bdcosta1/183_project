@@ -4,6 +4,7 @@
 </head>
 
 <body>
+
 	{{ for cat in details: }}
 		{{ if cat.Rented == False: }}
 			{{ if not cat.Human == auth.user_id: }}
@@ -11,6 +12,12 @@
 			{{pass}}
 		{{pass}}
 	{{pass}}
+
+{{=request.args(0)}}
+
+{{=details}}
+<br>
+
 
 	<br><br>
 
