@@ -216,8 +216,8 @@ def user():
         @auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
-    auth.settings.registration_requires_verification = True
-    auth.settings.login_after_registration = True
+    # auth.settings.registration_requires_verification = True
+    # auth.settings.login_after_registration = True
     return dict(form=auth())
 
 

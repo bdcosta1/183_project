@@ -4,17 +4,14 @@
 </head>
 
 <body>
-TESTTTTTTTTT 
-{{=request.args(0)}}
-
-{{=details}}
-<br>
-{{ for cat in details: }}
-	{{ if cat.Rented == False: }}
-		{{=A('Rent me meow', _class='btn btn-primary', _href=URL('default', 'rent_cat', args=[request.args(0)]))}}
+	{{ for cat in details: }}
+		{{ if cat.Rented == False: }}
+			{{ if not cat.Human == auth.user_id: }}
+				{{=A('Rent me meow', _class='btn btn-primary', _href=URL('default', 'rent_cat', args=[request.args(0)]))}}
+			{{pass}}
+		{{pass}}
 	{{pass}}
-{{pass}}
 
-<br><br>
+	<br><br>
 
 </body>
