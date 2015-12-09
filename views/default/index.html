@@ -27,22 +27,22 @@
     <div class = "Ratings">
         <div class= "row">
 
-            <div class="col-md-4" height="500">
+            <div class="col-md-4">
                 <div class="thumbnail" align="middle">
                     {{if auth.user_id is not None:}}
                         <p class="indexP">{{=A('Add Your Own Cat', _href=URL('default', 'add_cat'))}}</p>
                     {{else:}}
                         <p class="indexP">{{=A('Add Your Own Cat', _href=URL('default', 'user', args=['login']))}}</p>
                     {{pass}}
-                    <img src="https://bytebucket.org/snippets/asilva3/4Laod/raw/61e9a87e6d04c92a3cfee1d29e600b5a74fdaf95/heart-icon.jpg">
+                    <img src="https://bytebucket.org/snippets/asilva3/4Laod/raw/61e9a87e6d04c92a3cfee1d29e600b5a74fdaf95/heart-icon.jpg" height="300">
                 </div>
             </div>
 
-            <div class="col-md-4" align="middle">
+            <div class="col-md-4" align="middle" >
                 <div class="thumbnail">
                     <div class = "Leader">
                         <p class="indexP">{{=A('View Cats', _class='white', _href=URL('default', 'listings'))}}</p>
-                        <img src="https://bytebucket.org/snippets/asilva3/yqaoG/raw/febcf5311336719b7648dfc779fbb2eeb3a5a5e1/yeye.jpg" height="100" width="300" class="img-rounded">
+                        <img src="https://bytebucket.org/snippets/asilva3/yqaoG/raw/febcf5311336719b7648dfc779fbb2eeb3a5a5e1/yeye.jpg" height="160" width="300" class="img-rounded">
                     </div>
                 </div>
             </div>
@@ -54,9 +54,8 @@
                         <p class="indexP"> {{=A('View Profile',  _href=URL('default', 'user_profile', args=[auth.user_id]))}}</p>
                         <img src="http://cdn.osxdaily.com/wp-content/uploads/2013/07/contacts-icon.jpg" width="100" height="10">
                     {{else:}}
-                        <p class="indexP"> {{=A('Log In',  _href=URL('default', 'user', args=['login']))}} Or
-                            {{=A('Sign Up',  _href=URL('default', 'user', args=['register']))}}
-                        </p>
+                        <p class="indexP"> {{=A('Log In',  _href=URL('default', 'user', args=['login']))}}</p>
+                        <p class="indexP"> {{=A('Sign Up',  _href=URL('default', 'user', args=['register']))}}</p>
                         <img src="http://cdn.osxdaily.com/wp-content/uploads/2013/07/contacts-icon.jpg" width="100" height="10">
                     {{pass}}
                 </div>
