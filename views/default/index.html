@@ -1,5 +1,5 @@
 {{extend 'layout.html'}}
-
+<body style="background: radial-gradient(#f5f5f5, #000000)">
  <!--audio for our website-->
  <audio id="myAudio" autoplay loop>
     <source src="/welcome/static/mp3/music.mp3"
@@ -27,7 +27,7 @@
     <div class = "Ratings">
         <div class= "row">
 
-            <div class="col-md-4">
+            <div class="col-md-4" height="500">
                 <div class="thumbnail" align="middle">
                     {{if auth.user_id is not None:}}
                         <p class="indexP">{{=A('Add Your Own Cat', _href=URL('default', 'add_cat'))}}</p>
@@ -75,3 +75,4 @@ function mute(){
   }
 }
 </script>
+</body>
