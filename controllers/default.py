@@ -84,14 +84,23 @@ def update_cat():
     return "ok"
 
 def user_profile():
-
+    loggedInId = -1
     loggedIn = True
+    isProfile = 0
+    loggedInName = ""
+
     if auth.user_id is None:
         loggedIn = False
-    if auth.user_id != request.args(0):
-        loggedIn = False
+    else:
+        loggedInId = auth.user_id
+        loggedInName = db(db.auth_user.id == auth.user_id).select().first().first_name
+
+    if loggedInId == int(request.args(0)):
+        isProfile = 1
+
     row = db(db.auth_user.id == request.args(0)).select().first()
-    return dict(loggedIn=loggedIn, user_id=request.args(0), first_name=row.first_name, prof_email=row.email)
+
+    return dict(loggedIn=loggedIn, user_id=request.args(0), first_name=row.first_name, prof_email=row.email, loggedInId=loggedInId, isProfile=isProfile, loggedInName = loggedInName)
 
 def user_cats():
     """Loads all messages for the user."""
@@ -99,6 +108,14 @@ def user_cats():
     d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image, 'Created_On': r.Created_On}
         for r in rows}
     return response.json(dict(cat_dict=d))
+
+def profile_ratings():
+    """Loads all messages for the user."""
+    rows = db(db.ratings.reviewed_profile == request.vars.user_num).select()
+    d = {r.id: {'reviewed_profile': r.reviewed_profile, 'reviewer_profile': r.reviewer_profile, 'rating': r.rating, 'description': r.description, 'reviewer_name': r.reviewer_name, 'updated_on': r.updated_on}
+        for r in rows}
+    print rows
+    return response.json(dict(rating_dict=d))
 
 def load_cats():
     """Loads all messages for the user."""
@@ -187,6 +204,9 @@ def deleteCat():
     db(db.cat.id == request.vars.key).delete()
     return "ok"
 
+def updateReview():
+    db.ratings.update_or_insert((db.ratings.reviewed_profile==request.vars.user_id) & (db.ratings.reviewer_profile == request.vars.loggedInId),reviewed_profile = request.vars.user_id, reviewer_profile = request.vars.loggedInId, rating= request.vars.rating, description = request.vars.description, reviewer_name = request.vars.reviewer_name, updated_on = datetime.now())
+    return "ok"
 
 def user():
     """

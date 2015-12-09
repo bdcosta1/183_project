@@ -3,7 +3,7 @@
 <div id="target"></div>
 
 <script id="template" type="text/ractive">
-    {% #if loggedIn %}
+    {% #if isProfile === "1" %}
         <p style="font-size: 300%;">Your Profile</p>
         <p> Email: {% prof_email %}</p>
         <br>
@@ -108,13 +108,56 @@
                 </td>
                 <td bgcolor="white">
                     <a href="{{=URL('default', 'cat_details')}}/{%loc%}">View More Details</a>
-                    <a href="{{=URL('default', 'cat_edit')}}/{%loc%}"><i class="fa fa-pencil"></i></a>
-                            <button data-iden="{% loc %}" on-click = "deleteListing"><i class="fa fa-trash-o"></i></button>
+                    {% #if isProfile === '1' %}
+                        <a href="{{=URL('default', 'cat_edit')}}/{%loc%}"><i class="fa fa-pencil"></i></a>
+                        <button data-iden="{% loc %}" on-click = "deleteListing"><i class="fa fa-trash-o"></i></button>
+                    {% /if %}
                 </td>
             </tr>
-        {% /cat_dict %}
+        {% /cat_List %}
         </table>
         <br>
+        {% #if isProfile === "1" %}
+            <p>Your Ratings</p>
+        {% else %}
+            <p>{% first_name %}'s Ratings</p>
+        {% /if %}
+        {% #if loggedIn === "True" %}
+            {% #if isProfile === "0" %}
+                <br>
+                <b>Your Review</b><br><br>
+                <p>
+                <textarea value = "{% userReview %}"></textarea><br>
+                {% #if thumbStatus === -1 %}
+                    <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-o-up"></i></button>
+                    <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-o-down"></i></button>
+                {% /if %}
+                {% #if thumbStatus === 0 %}
+                    <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-o-up"></i></button>
+                    <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-down"></i></button>
+                {% /if %}
+                {% #if thumbStatus === 1 %}
+                    <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-up"></i></button>
+                    <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-o-down"></i></button>
+                {% /if %}
+                <br><br>
+                <input class="btn btn-primary" type="submit" value="Add/Update Review" on-click="sendReview"/>
+                </p>
+                <br>
+                <b>Other Reviews</b>
+            {% /if %}
+
+        {% /if %}
+        {% #ratings_List:rating_id %}
+            <br>
+            {% #if rating === "1" %}
+                <p>{% reviewer_name %} {% description %} <i class="fa fa-thumbs-up"></i></p>
+            {% else %}
+                <p>{% reviewer_name %} {% description %} <i class="fa fa-thumbs-down"></i></p>
+            {% /if %}
+            <br>
+        {% /ratings_List %}
+
     </div>
 
 </script>
@@ -129,17 +172,23 @@ $(function() {
         tripleDelimiters: ['{%%', '%%}'],
         data: {
             cat_List: [],
+            ratings_List: [],
             mytext: 'Enter Cat Name',
             loggedIn: "{{=loggedIn}}",
             user_id: "{{=user_id}}",
             first_name: "{{=first_name}}",
             prof_email: "{{=prof_email}}",
+            loggedInId: "{{=loggedInId}}",
+            isProfile: "{{=isProfile}}",
+            loggedInName: "{{=loggedInName}}",
+            thumbStatus: -1,
             oldCatName: "",
             editingKey: -1,
             stateSelected: "All States",
             breedSelected: "All Breeds",
             ageSelected: "All Ages",
             priceSelected: "All Prices",
+            userReview: "",
             sortFrom: true,
             fromDesc: true,
             sortName: false,
@@ -333,6 +382,61 @@ $(function() {
             }
         );
     }
+    function periodic_receive_ratings() {
+        $.ajax("{{=URL('default', 'profile_ratings', user_signature=True)}}",
+                {
+                    data: {
+                        user_num: MAIN.get("user_id")
+
+                    },
+                    method: 'POST',
+                    success: function (data) {
+                        var rating_dict = data['rating_dict'];
+                        var tempList = [];
+                        for (var key in rating_dict) {
+                            if (rating_dict[key]["reviewer_profile"] == MAIN.get("loggedInId")) {
+                                MAIN.set("thumbStatus", parseInt(rating_dict[key]["rating"]));
+                                MAIN.set("userReview", rating_dict[key]["description"]);
+                                delete rating_dict[key];
+                            }
+                            else {
+                                tempList.push(rating_dict[key]);
+                            }
+
+                        }
+
+                        tempList.sort(function (a, b) {
+                            if (a.updated_on > b.updated_on) {
+                                return -1;
+                            }
+                            if (a.updated_on < b.updated_on) {
+                                return 1;
+                            }
+                            return 0;
+                        });
+                        MAIN.set("ratings_List", tempList);
+                    }
+                }
+        );
+    }
+    periodic_receive_ratings();
+    function updateReview() {
+        $.ajax("{{=URL('default', 'updateReview', user_signature=True)}}",
+                {
+                    data: {
+                        user_id: MAIN.get("user_id"),
+                        loggedInId: MAIN.get("loggedInId"),
+                        rating: MAIN.get("thumbStatus"),
+                        description: MAIN.get("userReview"),
+                        reviewer_name: MAIN.get("loggedInName")
+                    },
+                    method: 'POST',
+                    success: function (data) {
+                        $.web2py.flash("review inputted");
+                    }
+                }
+        );
+    }
     periodic_receive();
     setInterval(periodic_receive, 10000);
     MAIN.on("filterResults", function(e) {
@@ -431,10 +535,29 @@ $(function() {
 
     });
 
-    MAIN.on("deleteListing", function(e) {
-        var key = $(e.node).data("iden");
-        deleteCat(key);
-        periodic_receive();
+    MAIN.on("thumbHandle", function(e) {
+        var thumbClicked = $(e.node).data("iden");
+        if(thumbClicked == "up" && MAIN.get("thumbStatus") == 0){
+            MAIN.set("thumbStatus", 1);
+        }
+        else if(thumbClicked == "down" && MAIN.get("thumbStatus") == 1){
+            MAIN.set("thumbStatus", 0);
+        }
+        else if(MAIN.get("thumbStatus") == -1){
+            if(thumbClicked=="up")
+                MAIN.set("thumbStatus", 1);
+            else
+                MAIN.set("thumbStatus", 0);
+        }
+
+    });
+    MAIN.on("sendReview", function(e){
+        if (MAIN.get("thumbStatus") == -1)
+            alert("Must Choose a Rating");
+        else if (MAIN.get("userReview").length == 0)
+            alert("Must Enter a Review");
+        else
+            updateReview();
     });
 });
 

@@ -59,3 +59,11 @@ db.define_table('customer_rentals',
 # cats rented from owners
 db.define_table('your_rentals',
                 )
+db.define_table('ratings',
+                Field('reviewed_profile'),
+                Field('reviewer_profile'),
+                Field('rating'),
+                Field('description'),
+                Field('reviewer_name'),
+                Field('updated_on', default=datetime.now())
+                )
