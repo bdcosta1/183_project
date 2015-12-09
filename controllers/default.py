@@ -38,11 +38,25 @@ def your_cat_rentals():
 
 # rental accepted, current renter set and timestamped, returns cat id
 def accept_cat_rental():
-    print request.args(0)
-    print request.args(1)
+    # print request.args(0)
+    # print request.args(1)
     db(db.cat.id == request.args(0)).update(Current_Renter=request.args(1), Rented_On=datetime.now())
-    redirect(URL('default', 'your_cat_rentals', args=[request.args(0)]))
-    return ""
+    row = db(db.cat.id == request.args(0)).select().first()
+    db.customer_rentals.insert(
+                            Renter=row['Current_Renter'],
+                            Human=row['Human'],
+                            cat_id=row['id'],
+                            Place=row['Place'],
+                            Breed=row['Breed'],
+                            Name=row['Name'],
+                            Bio=row['Bio'],
+                            Age=row['Age'],
+                            Price=row['Price'],
+                            Image=row['Image'],
+                            Rented_On=row['Rented_On'],
+                            )
+    redirect(URL('default', 'your_cat_rentals'))
+    return ''
 
 # if rent declined, requestor becomes cat owner and rented set to false for cat
 def decline_cat_rental():
@@ -58,15 +72,14 @@ def end_rental():
     redirect(URL('default', 'your_cat_rentals'))
     return ""
 
-                # Field('Place', requires=IS_IN_SET(states)),
-                # Field('Breed', requires=IS_IN_SET(cat_breeds)),
-                # Field('Name'),
-                # Field('Bio', 'text'),
-                # Field('Age', requires=IS_IN_SET(ages)),
-                # Field('Price', 'integer'),
-                # Field('Image', 'upload'),
-                # Field('Renter', db.auth_user, readable=False, writable=False),
-                # Field('Rental_Time', 'datetime', readable=False, writable=False),
+def customer_history():
+    row = db(db.customer_rentals.Human == auth.user_id).select()
+    return dict(row=row)
+
+def your_rental_history():
+    row = db(db.customer_rentals.Renter == auth.user_id).select()
+    return dict(row=row)
+
 
 def listings():
     loggedIn = True

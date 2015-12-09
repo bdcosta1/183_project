@@ -3,7 +3,8 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 </head>
 <body>
-
+{{=A("Customer History", _class='btn btn-primary', _href=URL('default', 'customer_history'))}}
+{{=A("Your Rented Cats", _class='btn btn-primary', _href=URL('default', 'your_rental_history'))}}
 	<h2>Cats your are renting out</h2>
 	{{ for cat in row: }}
 		{{ if cat.Rented==True: }}
@@ -11,7 +12,6 @@
 				Cat Name: {{=cat.Name}}
 				<br>
 				{{=A("Cat Returned?", _class='btn btn-primary', _href=URL('default', 'end_rental', args=[cat.id, cat.Current_Renter, cat.Rented_On]))}}
-
 			{{pass}}
 		{{pass}}
 	{{pass}}
@@ -19,8 +19,10 @@
 	<h2>Customer Requests</h2>
 	{{ for cat in row: }}
 		{{ if cat.Rented==True: }}
-			{{ if cat.Current_Renter == auth.user_id: }}
+			{{ if cat.Current_Renter == cat.Human: }}
 				Cat Name: {{=cat.Name}}
+				<br>
+				Customer: 
 				<br>
 				{{=A("Rent Cat", _class='btn btn-primary', _href=URL('default', 'accept_cat_rental', args=[cat.id, cat.Requester]))}}
 				{{=A("Decline Rental", _class='btn btn-danger', _href=URL('default', 'decline_cat_rental', args=[cat.id]))}}

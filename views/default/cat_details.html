@@ -4,8 +4,19 @@
 </head>
 
 <body>
+
+
 <p style="font-size: 300%;">{{=row.Name}}</p><br>
+<p style="font-size: 300%;">Bio:</p>
+<p>{{=row.Bio}}</p>
 <img src="{{=URL('default', 'download', args=row.Image)}}" height = 200 width = 200 />
+<br>
+{{ if row.Requester == auth.user_id: }}
+    {{ if row.Requester != row.Human: }}
+        <h3>Please contact owner to arrange rental</h3>
+    {{pass}}
+{{pass}}
+<br>
 {{ if row.Rented == False: }}
     {{ if not row.Human == auth.user_id: }}
         <br><br>
@@ -22,5 +33,3 @@
 <br>
 
 </body>
-<p style="font-size: 300%;">Bio:</p>
-<p>{{=row.Bio}}</p>

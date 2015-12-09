@@ -45,15 +45,17 @@ db.define_table('cat',
 
 # cats rented to owners
 db.define_table('customer_rentals',
-                Field('Place', requires=IS_IN_SET(states)),
-                Field('Breed', requires=IS_IN_SET(cat_breeds)),
+                Field('cat_id', 'integer' ),
+                Field('Human', db.auth_user, readable=False, writable=False),
+                Field('Place'),
+                Field('Breed'),
                 Field('Name'),
                 Field('Bio', 'text'),
-                Field('Age', requires=IS_IN_SET(ages)),
+                Field('Age'),
                 Field('Price', 'integer'),
                 Field('Image', 'upload'),
                 Field('Renter', db.auth_user, readable=False, writable=False),
-                Field('Rental_Time', 'datetime', readable=False, writable=False),
+                Field('Rented_On', 'datetime', readable=False, writable=False),
                 )
 
 # cats rented from owners
