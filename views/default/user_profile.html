@@ -437,6 +437,23 @@ $(function() {
                 }
         );
     }
+    function deleteCat(key) {
+    $.ajax("{{=URL('default', 'deleteCat', user_signature=True)}}",
+            {
+              data: {
+                key: key,
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+                  periodic_receive();
+              },
+              error: function() {
+                  $.web2py.flash("cat deletion failure");
+              }
+            }
+        );
+    }
     periodic_receive();
     setInterval(periodic_receive, 10000);
     MAIN.on("filterResults", function(e) {
@@ -558,6 +575,11 @@ $(function() {
             alert("Must Enter a Review");
         else
             updateReview();
+    });
+    MAIN.on("deleteListing", function(e) {
+        var key = $(e.node).data("iden");
+        deleteCat(key);
+        periodic_receive();
     });
 });
 
