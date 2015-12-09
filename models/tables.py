@@ -38,5 +38,24 @@ db.define_table('cat',
                 Field('Human', db.auth_user, default=auth.user_id, readable =False, writable=False),
                 Field('Created_On', default=datetime.now().strftime("%m/%d"), readable=False, writable=False),
                 Field('Rented', 'boolean', default=False, readable =False, writable=False),
-                Field('Rented_On', readable=False, writable=False),
+                Field('Requester', db.auth_user, default=auth.user_id, readable=False, writable=False),
+                Field('Current_Renter', db.auth_user, readable=False, writable=False),
+                Field('Rented_On', 'datetime', readable=False, writable=False),
+                )
+
+# cats rented to owners
+db.define_table('customer_rentals',
+                Field('Place', requires=IS_IN_SET(states)),
+                Field('Breed', requires=IS_IN_SET(cat_breeds)),
+                Field('Name'),
+                Field('Bio', 'text'),
+                Field('Age', requires=IS_IN_SET(ages)),
+                Field('Price', 'integer'),
+                Field('Image', 'upload'),
+                Field('Renter', db.auth_user, readable=False, writable=False),
+                Field('Rental_Time', 'datetime', readable=False, writable=False),
+                )
+
+# cats rented from owners
+db.define_table('your_rentals',
                 )

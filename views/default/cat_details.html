@@ -8,7 +8,7 @@
 	{{ for cat in details: }}
 		{{ if cat.Rented == False: }}
 			{{ if not cat.Human == auth.user_id: }}
-				{{=A('Rent me meow', _class='btn btn-primary', _href=URL('default', 'rent_cat', args=[request.args(0)]))}}
+				{{=A('Rent me meow', _class='btn btn-primary', _href=URL('default', 'start_rental', args=[request.args(0)]))}}
 			{{pass}}
 		{{pass}}
 	{{pass}}
