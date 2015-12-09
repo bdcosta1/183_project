@@ -1,13 +1,15 @@
 {{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
+{{=A('Home Page', _class = 'btn btn-success',_href=URL('default', 'index'))}}
 <div id="target"></div>
+
 
 <script id="template" type="text/ractive">
     {% #if isProfile === "1" %}
         <p style="font-size: 300%;">Your Profile</p>
         <p> Email: {% prof_email %}</p>
         <br>
-        <p>Your Listings  {{=A('Add New Listing', _class = 'btn btn-success',_href=URL('default','add_cat'))}}</p>
+        <p>Your Listings  {{=A('Add New Listing', _class = 'btn btn-success',_href=URL('default','add_cat'))}}{{=A('Find a cat to adopt', _class = 'btn btn-primary',_href=URL('default','listings'))}}</p>
     {% else %}
         <p style="font-size: 300%;">{% first_name %}'s Profile</p>
         <p> Email: {% prof_email %}</p>

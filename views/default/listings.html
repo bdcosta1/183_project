@@ -3,10 +3,13 @@
 <div id="target"></div>
 
 <script id="template" type="text/ractive">
-    {{=A('Back to Home Page', _class='submit', _href=URL('default', 'index'))}}
+    {{=A('Home Page', _class = 'btn btn-success',_href=URL('default', 'index'))}}
+
     <div class="sortBox">
         {% #if loggedIn === "True" %}
-            <p>{% user_name %} is logged in</p>
+            <p>{% user_name %} is logged in
+            {{=A('View your profile', _class = 'btn btn-primary',_href=URL('default', 'user_profile', args=[auth.user_id]))}}
+            </p>
         {% else %}
             <p>No one is logged in</p>
         {% /if %}
@@ -49,11 +52,11 @@
             <option value = "All Prices">All Prices</option>
             <option value = "0-25">0-25</option><option value = "25-50">25-50</option><option value = "50-75">50-75</option><option value = "75-100">75-100</option><option value = ">100">greater than 100</option>
         </select>
-        <input class="btn btn-primary" type="submit" value="Search" on-click="filterResults"/>
+        <input class="btn btn-info" type="submit" value="Search" on-click="filterResults"/>
 
     </div>
     {% #if loggedIn === "True" %}
-        {{=A('Create New Listing!', _class='submit', _href=URL('default', 'add_cat'))}}
+        {{=A('Create New Listing!', _class = 'btn btn-primary',_href=URL('default', 'add_cat'))}}
     {% /if %}
     <p></p>
     <div class="myListings">
