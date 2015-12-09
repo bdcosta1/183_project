@@ -14,7 +14,7 @@ def index():
 def add_cat():
     form = SQLFORM(db.cat)
     if form.process().accepted:
-        session.flash = T('Your cat was add!')
+        session.flash = T('Your cat was added!')
         redirect(URL('default', 'listings'))
     elif form.errors:
         session.flash = T('Meow website is not working, please try again!')
@@ -22,8 +22,8 @@ def add_cat():
     return dict(form=form)
 
 def cat_details():
-    row = db(db.cat.id == request.args(0)).select()
-    return dict(details=row)
+    row = db(db.cat.id == request.args(0)).select().first()
+    return dict(row=row)
 
 def start_rental():
     print request.args(0)
@@ -72,7 +72,10 @@ def listings():
     loggedIn = True
     if auth.user_id is None:
         loggedIn = False
-    return dict(loggedIn=loggedIn, user_id=auth.user_id)
+        user_name = "none"
+    else:
+        user_name = auth.user.first_name
+    return dict(loggedIn=loggedIn, user_id=auth.user_id, user_name=user_name)
 
 @auth.requires_signature()
 def update_cat():
@@ -81,14 +84,18 @@ def update_cat():
     return "ok"
 
 def user_profile():
+
     loggedIn = True
     if auth.user_id is None:
         loggedIn = False
-    return dict(loggedIn=loggedIn, user_id=auth.user_id)
+    if auth.user_id != request.args(0):
+        loggedIn = False
+    row = db(db.auth_user.id == request.args(0)).select().first()
+    return dict(loggedIn=loggedIn, user_id=request.args(0), first_name=row.first_name, prof_email=row.email)
 
 def user_cats():
     """Loads all messages for the user."""
-    rows = db(db.cat.Human == auth.user_id).select()
+    rows = db(db.cat.Human == request.vars.user_num).select()
     d = {r.id: {'Name': r.Name, 'Human': r.Human, 'Breed':r.Breed, 'Place': r.Place, 'Age': r.Age, 'Bio': r.Bio, 'Price': r.Price, 'Image': r.Image, 'Created_On': r.Created_On}
         for r in rows}
     return response.json(dict(cat_dict=d))
@@ -162,6 +169,24 @@ def load_cats():
              for r in rows}
 
     return response.json(dict(cat_dict=d))
+
+def cat_edit():
+    cat = db.cat(request.args(0))
+    if cat is None:
+        session.flash = T('No cat exists')
+        redirect(URL('index'))
+    form = SQLFORM(db.cat, record=cat)
+    if form.process().accepted:
+        session.flash = T('Cat Edited')
+        redirect(URL('listings'))
+
+    return dict(form=form)
+
+@auth.requires_signature()
+def deleteCat():
+    db(db.cat.id == request.vars.key).delete()
+    return "ok"
+
 
 def user():
     """

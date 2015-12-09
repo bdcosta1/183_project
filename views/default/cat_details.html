@@ -4,21 +4,23 @@
 </head>
 
 <body>
-
-	{{ for cat in details: }}
-		{{ if cat.Rented == False: }}
-			{{ if not cat.Human == auth.user_id: }}
-				{{=A('Rent me meow', _class='btn btn-primary', _href=URL('default', 'start_rental', args=[request.args(0)]))}}
-			{{pass}}
-		{{pass}}
+<p style="font-size: 300%;">{{=row.Name}}</p><br>
+<img src="{{=URL('default', 'download', args=row.Image)}}" height = 200 width = 200 />
+{{ if row.Rented == False: }}
+    {{ if not row.Human == auth.user_id: }}
+        <br><br>
+        {{if auth.user_id is not None:}}
+            {{=A('Rent me meow', _class='btn btn-primary', _href=URL('default', 'start_rental', args=[request.args(0)]))}}
+        {{pass}}
+        {{=A('Go to Owners Page', _class='btn btn-primary', _href=URL('default', 'user_profile', args=[row.Human]))}}
+    {{else:}}
+        <br><br>
+        {{=A('Edit This Post', _class='btn btn-primary', _href=URL('default', 'cat_edit', args=[row.id]))}}
 	{{pass}}
-
-{{=request.args(0)}}
-
-{{=details}}
+{{pass}}
+<br>
 <br>
 
-
-	<br><br>
-
 </body>
+<p style="font-size: 300%;">Bio:</p>
+<p>{{=row.Bio}}</p>

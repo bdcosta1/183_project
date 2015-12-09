@@ -51,7 +51,7 @@
                 <div class="thumbnail" align="middle">
                     {{if auth.user_id is not None:}}
                         <p class="indexP"> {{=A('Logout',  _href=URL('default', 'user', args=['logout']))}}</p>
-                        <p class="indexP"> {{=A('View Profile',  _href=URL('default', 'user_profile'))}}</p>
+                        <p class="indexP"> {{=A('View Profile',  _href=URL('default', 'user_profile', args=[auth.user_id]))}}</p>
                         <img src="http://cdn.osxdaily.com/wp-content/uploads/2013/07/contacts-icon.jpg" width="100" height="10">
                     {{else:}}
                         <p class="indexP"> {{=A('Log In',  _href=URL('default', 'user', args=['login']))}} Or

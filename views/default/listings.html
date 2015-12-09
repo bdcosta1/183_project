@@ -3,8 +3,13 @@
 <div id="target"></div>
 
 <script id="template" type="text/ractive">
+    {{=A('Back to Home Page', _class='submit', _href=URL('default', 'index'))}}
     <div class="sortBox">
-        <p>{% breedSelected %} {% stateSelected %} {% ageSelected %} {% priceSelected %}</p>
+        {% #if loggedIn === "True" %}
+            <p>{% user_name %} is logged in</p>
+        {% else %}
+            <p>No one is logged in</p>
+        {% /if %}
         <select id = "breedSelect">
             <option value = "All Breeds">All Breeds</option>
             <option value = "Abyssinian">Abyssinian</option><option value = "American Bobtail">American Bobtail</option><option value = "American Curl">American Curl </option><option value = "American Shorthair">American Shorthair</option><option value = "American Wirehair">American Wirehair</option>
@@ -48,7 +53,7 @@
 
     </div>
     {% #if loggedIn === "True" %}
-        <input class="btn btn-primary" type="submit" value="Create New Post"/>
+        {{=A('Create New Listing!', _class='submit', _href=URL('default', 'add_cat'))}}
     {% /if %}
     <p></p>
     <div class="myListings">
@@ -127,16 +132,9 @@
                 <td bgcolor="white">
                     <p>{% Created_On %} <img src="{{=URL('default', 'download')}}/{% Image %}" height="60" width="60"/></p>
                 </td>
-                {% #if editable %}
-                    <td bgcolor="white">
-                        <p>{% Name %} <button data-iden="{% key %}"><i class="fa fa-pencil"></i></button></p>
-                    </td>
-                {% /if %}
-                {% #if editable === false %}
-                     <td bgcolor="white">
-                        <p>{% Name %}</p>
-                     </td>
-                {% /if %}
+                <td bgcolor="white">
+                     <p>{% Name %}</p>
+                </td>
                 <td bgcolor="white">
                     <p>{% Breed %}</p>
                 </td>
@@ -149,12 +147,21 @@
                 <td bgcolor="white">
                     <p>{% Price %}</p>
                 </td>
-                <td bgcolor="white">
-                    <a href="{% "cat_details" +"/" + loc %}">Cat Details!</a>
-                </td>
+                {% #if editable %}
+                    <td bgcolor="white">
+                        <a href="{% "cat_details" +"/" + loc %}">Cat Details!</a>
+                            <a href="{{=URL('default', 'cat_edit')}}/{%loc%}"><i class="fa fa-pencil"></i></a>
+                            <button data-iden="{% loc %}" on-click = "deleteListing"><i class="fa fa-trash-o"></i></button>
+                    </td>
+                {% else %}
+                    <td bgcolor="white">
+                        <a href="{% "cat_details" +"/" + loc %}">Cat Details!</a>
+                    </td>
+                {% /if %}
             </tr>
         {% /cat_dict %}
         </table>
+        <br>
     </div>
 
 </script>
@@ -172,6 +179,7 @@ $(function() {
             mytext: 'Enter Cat Name',
             loggedIn: "{{=loggedIn}}",
             user_id: "{{=user_id}}",
+            user_name:"{{=user_name}}",
             oldCatName: "",
             editingKey: -1,
             stateSelected: "All States",
@@ -356,6 +364,23 @@ $(function() {
                 }
         );
     }
+    function deleteCat(key) {
+    $.ajax("{{=URL('default', 'deleteCat', user_signature=True)}}",
+            {
+              data: {
+                key: key,
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+                  periodic_receive();
+              },
+              error: function() {
+                  $.web2py.flash("cat deletion failure");
+              }
+            }
+        );
+    }
     periodic_receive();
     setInterval(periodic_receive, 10000);
     MAIN.on("filterResults", function(e) {
@@ -452,6 +477,11 @@ $(function() {
             periodic_receive();
         }
 
+    });
+    MAIN.on("deleteListing", function(e) {
+        var key = $(e.node).data("iden");
+        deleteCat(key);
+        periodic_receive();
     });
 });
 
