@@ -4,7 +4,6 @@
 
 <script id="template" type="text/ractive">
     <div class="sortBox">
-        <p>{% breedSelected %} {% stateSelected %} {% ageSelected %} {% priceSelected %}</p>
         <select id = "breedSelect">
             <option value = "All Breeds">All Breeds</option>
             <option value = "Abyssinian">Abyssinian</option><option value = "American Bobtail">American Bobtail</option><option value = "American Curl">American Curl </option><option value = "American Shorthair">American Shorthair</option><option value = "American Wirehair">American Wirehair</option>
@@ -48,7 +47,7 @@
 
     </div>
     {% #if loggedIn === "True" %}
-        <input class="btn btn-primary" type="submit" value="Create New Post"/>
+        <input class="btn btn-primary" type="submit" value="Create New Listing"/>
     {% /if %}
     <p></p>
     <div class="myListings">
@@ -127,16 +126,9 @@
                 <td bgcolor="white">
                     <p>{% Created_On %} <img src="{{=URL('default', 'download')}}/{% Image %}" height="60" width="60"/></p>
                 </td>
-                {% #if editable %}
-                    <td bgcolor="white">
-                        <p>{% Name %} <button data-iden="{% key %}"><i class="fa fa-pencil"></i></button></p>
-                    </td>
-                {% /if %}
-                {% #if editable === false %}
-                     <td bgcolor="white">
-                        <p>{% Name %}</p>
-                     </td>
-                {% /if %}
+                <td bgcolor="white">
+                    <p>{% Name %}</p>
+                </td>
                 <td bgcolor="white">
                     <p>{% Breed %}</p>
                 </td>
