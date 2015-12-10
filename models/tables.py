@@ -58,9 +58,7 @@ db.define_table('customer_rentals',
                 Field('Rented_On', 'datetime', readable=False, writable=False),
                 )
 
-# cats rented from owners
-db.define_table('your_rentals',
-                )
+
 db.define_table('ratings',
                 Field('reviewed_profile'),
                 Field('reviewer_profile'),

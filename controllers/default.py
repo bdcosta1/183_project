@@ -33,8 +33,9 @@ def start_rental():
 
 def your_cat_rentals():
     row = db((db.cat.Human == auth.user_id) & (db.cat.Rented == True)).select()
-    print row
-    return dict(row=row)
+    your_rentals = db((db.cat.Requester == auth.user_id) & (db.cat.Rented == True)).select()
+
+    return dict(row=row, your_cat_rentals=your_rentals)
 
 # rental accepted, current renter set and timestamped, returns cat id
 def accept_cat_rental():

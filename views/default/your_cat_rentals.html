@@ -29,6 +29,12 @@
 			{{pass}}
 		{{pass}}
 	{{pass}}
+
+	<h2>Cats you are renting</h2>
+	{{ for cat in your_cat_rentals: }}
+		Cate Name: {{=cat.Name}}
+		<br><br>
+	{{ pass }}
 </body>
 
 
