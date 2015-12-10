@@ -3,7 +3,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 </head>
 <body style="background: linear-gradient(#d1d1e0, #52527a)">
-
+{{=A('Back', _class='btn btn-primary', _href=URL('default', 'user_profile', args=[auth.user_id]))}}
 {{=A("Customer History", _class='btn btn-primary', _href=URL('default', 'customer_history'))}}
 {{=A("Your Rented Cats", _class='btn btn-primary', _href=URL('default', 'your_rental_history'))}}
 	<h2>Cats your are renting out</h2>

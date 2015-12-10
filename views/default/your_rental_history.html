@@ -1,8 +1,18 @@
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+</head>
+
+
 <body style="background: linear-gradient(#d1d1e0, #52527a)">
+{{=A('Back', _class='btn btn-primary', _href=URL('default', 'your_cat_rentals', args=[auth.user_id]))}}
 <h2>Your Rental History</h2>
-<br><br>
+<br>
 {{ for r in row: }}
-	{{=r}}
+	Name: {{=r.Name}}<br>
+	Age: {{=r.Age}}<br>
+	Price: {{=r.Price}}<br>
+	Rented on: {{=r.Rented_On}}
 	<br><br>
 {{pass}}
 

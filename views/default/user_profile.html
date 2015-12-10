@@ -7,7 +7,8 @@
         <p style="font-size: 300%;">Your Profile</p>
         <p> Email: {% prof_email %}</p>
         <br>
-        <p>Your Listings  {{=A('Add New Listing', _class = 'btn btn-success',_href=URL('default','add_cat'))}}
+        <p>
+        {{=A('Listings', _class='btn btn-primary', _href=URL('default', 'listings'))}}Your Listings  {{=A('Add New Listing', _class = 'btn btn-success',_href=URL('default','add_cat'))}}
         Cat Rentals  {{=A('Manage Rentals', _class = 'btn btn-success',_href=URL('default','your_cat_rentals'))}}</p>
     {% else %}
         <p style="font-size: 300%;">{% first_name %}'s Profile</p>
