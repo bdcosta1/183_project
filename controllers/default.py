@@ -28,7 +28,7 @@ def cat_details():
 def start_rental():
     print request.args(0)
     db(db.cat.id == request.args(0)).update(Rented=True, Requester=auth.user_id)
-    redirect(URL('default', 'listings'))
+    redirect(URL('default', 'cat_details', args=[request.args(0)]))
     return ""
 
 def your_cat_rentals():

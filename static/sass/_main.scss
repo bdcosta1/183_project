@@ -22,10 +22,13 @@ div img{
     font-size:35px;
 }
 
+div.thumbnail{
+    height:250px;
+}
+
 .colorful {
   color: $clrHilight;
 }
-
 
 div.catList{
     background: linear-gradient(white, whitesmoke);

@@ -1,14 +1,21 @@
 {{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
+<body style="background: linear-gradient(#ffffff, #000000)">
 <div id="target"></div>
 
 <script id="template" type="text/ractive">
-    {{=A('Back to Home Page', _class='submit', _href=URL('default', 'index'))}}
+    {{=A('Home Page', _class = 'btn btn-success',_href=URL('default', 'index'))}}
+
     <div class="sortBox">
         {% #if loggedIn === "True" %}
-            <p>{% user_name %} is logged in</p>
+            <p>{% user_name %} is logged in
+            {{=A('View your profile', _class = 'btn btn-primary',_href=URL('default', 'user_profile', args=[auth.user_id]))}}
+            </p>
         {% else %}
-            <p>No one is logged in</p>
+            <p>No one is logged in
+            {{=A('Log In', _class = 'btn btn-primary',_href=URL('default', 'user', args=['login']))}}
+            {{=A('Sign up', _class = 'btn btn-primary',_href=URL('default', 'user', args=['register']))}}
+            </p>
         {% /if %}
         <select id = "breedSelect">
             <option value = "All Breeds">All Breeds</option>
@@ -49,11 +56,11 @@
             <option value = "All Prices">All Prices</option>
             <option value = "0-25">0-25</option><option value = "25-50">25-50</option><option value = "50-75">50-75</option><option value = "75-100">75-100</option><option value = ">100">greater than 100</option>
         </select>
-        <input class="btn btn-primary" type="submit" value="Search" on-click="filterResults"/>
+        <input class="btn btn-info" type="submit" value="Search" on-click="filterResults"/>
 
     </div>
     {% #if loggedIn === "True" %}
-        {{=A('Create New Listing!', _class='submit', _href=URL('default', 'add_cat'))}}
+        {{=A('Create New Listing!', _class = 'btn btn-primary',_href=URL('default', 'add_cat'))}}
     {% /if %}
     <p></p>
     <div class="myListings">
@@ -61,100 +68,101 @@
         <tr>
             {% #if sortFrom == true %}
                 {% #if fromDesc == true %}
-                    <th>From <button class = "myButton" data-iden="fromAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                    <th style="text-align: center;">From <button class = "myButton" data-iden="fromAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
                 {% /if %}
                 {% #if fromDesc == false %}
-                    <th>From <button class = "myButton" data-iden="fromDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                    <th style="text-align: center;">From <button class = "myButton" data-iden="fromDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
                 {% /if %}
             {% /if %}
             {% #if sortFrom == false %}
-                <th>From <button class = "myButton" data-iden="fromDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+                <th style="text-align: center;">From <button class = "myButton" data-iden="fromDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
             {% /if %}
             {% #if sortName == true %}
                 {% #if nameDesc == true %}
-                    <th>Name <button class = "myButton" data-iden="nameAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                    <th style="text-align: center;">Name <button class = "myButton" data-iden="nameAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
                 {% /if %}
                 {% #if nameDesc == false %}
-                    <th>Name <button class = "myButton" data-iden="nameDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                    <th style="text-align: center;">Name <button class = "myButton" data-iden="nameDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
                 {% /if %}
             {% /if %}
             {% #if sortName == false %}
-                <th>Name <button class = "myButton" data-iden="nameDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+                <th style="text-align: center;">Name <button class = "myButton" data-iden="nameDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
             {% /if %}
             {% #if sortBreed == true %}
                 {% #if breedDesc == true %}
-                    <th>Breed <button class = "myButton" data-iden="breedAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                    <th style="text-align: center;">Breed <button class = "myButton" data-iden="breedAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
                 {% /if %}
                 {% #if breedDesc == false %}
-                    <th>Breed <button class = "myButton" data-iden="breedDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                    <th style="text-align: center;">Breed <button class = "myButton" data-iden="breedDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
                 {% /if %}
             {% /if %}
             {% #if sortBreed == false %}
-                <th>Breed <button class = "myButton" data-iden="breedDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+                <th style="text-align: center;">Breed <button class = "myButton" data-iden="breedDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
             {% /if %}
             {% #if sortPlace == true %}
                 {% #if placeDesc == true %}
-                    <th>Place <button class = "myButton" data-iden="placeAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                    <th style="text-align: center;">Place <button class = "myButton" data-iden="placeAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
                 {% /if %}
                 {% #if placeDesc == false %}
-                    <th>Place <button class = "myButton" data-iden="placeDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                    <th style="text-align: center;">Place <button class = "myButton" data-iden="placeDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
                 {% /if %}
             {% /if %}
             {% #if sortPlace == false %}
-                <th>Place <button class = "myButton" data-iden="placeDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+                <th style="text-align: center;">Place <button class = "myButton" data-iden="placeDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
             {% /if %}
             {% #if sortAge == true %}
                 {% #if ageDesc == true %}
-                    <th>Age <button class = "myButton" data-iden="ageAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                    <th style="text-align: center;">Age <button class = "myButton" data-iden="ageAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
                 {% /if %}
                 {% #if ageDesc == false %}
-                    <th>Age <button class = "myButton" data-iden="ageDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                    <th style="text-align: center;">Age <button class = "myButton" data-iden="ageDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
                 {% /if %}
             {% /if %}
             {% #if sortAge == false %}
-                <th>Age <button class = "myButton" data-iden="ageDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+                <th style="text-align: center;">Age <button class = "myButton" data-iden="ageDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
             {% /if %}
             {% #if sortPrice == true %}
                 {% #if priceDesc == true %}
-                    <th>Price <button class = "myButton" data-iden="priceAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
+                    <th style="text-align: center;">Price <button class = "myButton" data-iden="priceAsc" on-click = "sortByHandle"><i class="fa fa-sort-desc"></i></button></th>
                 {% /if %}
                 {% #if priceDesc == false %}
-                    <th>Price <button class = "myButton" data-iden="priceDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
+                    <th style="text-align: center;">Price <button class = "myButton" data-iden="priceDesc" on-click = "sortByHandle"><i class="fa fa-sort-asc"></i></button></th>
                 {% /if %}
             {% /if %}
             {% #if sortPrice == false %}
-                <th>Price <button class = "myButton" data-iden="priceDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
+                <th style="text-align: center;">Price <button class = "myButton" data-iden="priceDesc" on-click = "sortByHandle"><i class="fa fa-sort"></i></button></th>
             {% /if %}
             <th></th>
         </tr>
         {% #cat_List:cat_id %}
             <tr>
-                <td bgcolor="white">
-                    <p>{% Created_On %} <img src="{{=URL('default', 'download')}}/{% Image %}" height="60" width="60"/></p>
+                <td bgcolor="white" style="text-align: center;">
+                    <p>{% Created_On %} </p>
+                    <p><img src="{{=URL('default', 'download')}}/{% Image %}" height="60" width="60"/></p>
                 </td>
-                <td bgcolor="white">
+                <td bgcolor="white" style="text-align: center;">
                      <p>{% Name %}</p>
                 </td>
-                <td bgcolor="white">
+                <td bgcolor="white" style="text-align: center;">
                     <p>{% Breed %}</p>
                 </td>
-                <td bgcolor="white">
+                <td bgcolor="white" style="text-align: center;">
                     <p>{% Place %}</p>
                 </td>
-                <td bgcolor="white">
+                <td bgcolor="white" style="text-align: center;">
                     <p>{% Age %}</p>
                 </td>
-                <td bgcolor="white">
+                <td bgcolor="white" style="text-align: center;">
                     <p>{% Price %}</p>
                 </td>
                 {% #if editable %}
-                    <td bgcolor="white">
+                    <td bgcolor="white" style="text-align: center;">
                         <a href="{% "cat_details" +"/" + loc %}">Cat Details!</a>
                             <a href="{{=URL('default', 'cat_edit')}}/{%loc%}"><i class="fa fa-pencil"></i></a>
                             <button data-iden="{% loc %}" on-click = "deleteListing"><i class="fa fa-trash-o"></i></button>
                     </td>
                 {% else %}
-                    <td bgcolor="white">
+                    <td bgcolor="white" style="text-align: center;">
                         <a href="{% "cat_details" +"/" + loc %}">Cat Details!</a>
                     </td>
                 {% /if %}
@@ -486,3 +494,4 @@ $(function() {
 });
 
 </script>
+</body>
