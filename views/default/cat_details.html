@@ -10,6 +10,8 @@
 <p style="font-size: 300%;">Bio:</p>
 <p>{{=row.Bio}}</p>
 <img src="{{=URL('default', 'download', args=row.Image)}}" height = 200 width = 200 />
+<br><br>
+{{=A('Go to Owners Page', _class='btn btn-primary', _href=URL('default', 'user_profile', args=[row.Human]))}}
 <br>
 {{ if row.Requester == auth.user_id: }}
     {{ if row.Requester != row.Human: }}

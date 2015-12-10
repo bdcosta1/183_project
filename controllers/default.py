@@ -101,6 +101,7 @@ def user_profile():
     loggedIn = True
     isProfile = 0
     loggedInName = ""
+    can_rate = False
 
     if auth.user_id is None:
         loggedIn = False
@@ -112,8 +113,13 @@ def user_profile():
         isProfile = 1
 
     row = db(db.auth_user.id == request.args(0)).select().first()
+    cats = db((db.customer_rentals.Human == request.args(0)) & (db.customer_rentals.Renter == auth.user_id)).select()
+    print len(cats)
+    if len(cats) > 0:
+        can_rate = True
 
-    return dict(loggedIn=loggedIn, user_id=request.args(0), first_name=row.first_name, prof_email=row.email, loggedInId=loggedInId, isProfile=isProfile, loggedInName = loggedInName)
+
+    return dict(can_rate=can_rate, loggedIn=loggedIn, user_id=request.args(0), first_name=row.first_name, prof_email=row.email, loggedInId=loggedInId, isProfile=isProfile, loggedInName = loggedInName)
 
 def user_cats():
     """Loads all messages for the user."""

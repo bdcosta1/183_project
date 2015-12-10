@@ -119,37 +119,39 @@
         {% /cat_List %}
         </table>
         <br>
+
         {% #if isProfile === "1" %}
             <p>Your Ratings</p>
         {% else %}
             <p>{% first_name %}'s Ratings</p>
         {% /if %}
-        {% #if loggedIn === "True" %}
-            {% #if isProfile === "0" %}
-                <br>
-                <b>Your Review</b><br><br>
-                <p>
-                <textarea value = "{% userReview %}"></textarea><br>
-                {% #if thumbStatus === -1 %}
-                    <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-o-up"></i></button>
-                    <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-o-down"></i></button>
+        {{ if can_rate: }}
+            {% #if loggedIn === "True" %}
+                {% #if isProfile === "0" %}
+                    <br>
+                    <b>Your Review</b><br><br>
+                    <p>
+                    <textarea value = "{% userReview %}"></textarea><br>
+                    {% #if thumbStatus === -1 %}
+                        <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-o-up"></i></button>
+                        <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-o-down"></i></button>
+                    {% /if %}
+                    {% #if thumbStatus === 0 %}
+                        <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-o-up"></i></button>
+                        <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-down"></i></button>
+                    {% /if %}
+                    {% #if thumbStatus === 1 %}
+                        <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-up"></i></button>
+                        <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-o-down"></i></button>
+                    {% /if %}
+                    <br><br>
+                    <input class="btn btn-primary" type="submit" value="Add/Update Review" on-click="sendReview"/>
+                    </p>
+                    <br>
+                    <b>Other Reviews</b>
                 {% /if %}
-                {% #if thumbStatus === 0 %}
-                    <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-o-up"></i></button>
-                    <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-down"></i></button>
-                {% /if %}
-                {% #if thumbStatus === 1 %}
-                    <button data-iden="up" on-click="thumbHandle"><i class="fa fa-thumbs-up"></i></button>
-                    <button data-iden="down" on-click="thumbHandle"><i class="fa fa-thumbs-o-down"></i></button>
-                {% /if %}
-                <br><br>
-                <input class="btn btn-primary" type="submit" value="Add/Update Review" on-click="sendReview"/>
-                </p>
-                <br>
-                <b>Other Reviews</b>
             {% /if %}
-
-        {% /if %}
+        {{pass}}
         {% #ratings_List:rating_id %}
             <br>
             {% #if rating === "1" %}
