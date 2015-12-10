@@ -1,8 +1,7 @@
 {{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
+<body style="background: linear-gradient(#d1d1e0, #52527a)">
 <div id="target"></div>
-
-
 <script id="template" type="text/ractive">
     {% #if isProfile === "1" %}
         <p style="font-size: 300%;">Your Profile</p>
@@ -165,6 +164,8 @@
     </div>
 
 </script>
+
+</body>
 
 <script>
 $(function() {

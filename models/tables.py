@@ -39,7 +39,7 @@ db.define_table('cat',
                 Field('Created_On', default=datetime.now().strftime("%m/%d"), readable=False, writable=False),
                 Field('Rented', 'boolean', default=False, readable =False, writable=False),
                 Field('Requester', db.auth_user, default=auth.user_id, readable=False, writable=False),
-                Field('Current_Renter', db.auth_user, readable=False, writable=False),
+                Field('Current_Renter', db.auth_user, default=auth.user_id, readable=False, writable=False),
                 Field('Rented_On', 'datetime', readable=False, writable=False),
                 )
 
